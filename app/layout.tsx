@@ -4,6 +4,7 @@ import { NavigationDock } from "@/components/navigation-dock"
 import { Albert_Sans } from "next/font/google"
 import { Pill } from "@/components/ui/pill"
 import { Background } from "@/components/background"
+import { LenisProvider } from "@/components/lenis-provider"
 
 const albertSans = Albert_Sans({
   subsets: ["latin"],
@@ -26,12 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${albertSans.variable}`}>
-        <Background />
-        <a href="mailto:leongudmundssonekelund@gmail.com" className="fixed top-4 right-4 z-50">
-          <Pill>Get in touch</Pill>
-        </a>
-        {children}
-        <NavigationDock />
+        <LenisProvider>
+          <Background />
+          <a href="mailto:leongudmundssonekelund@gmail.com" className="fixed top-4 right-4 z-50">
+            <Pill>Get in touch</Pill>
+          </a>
+          {children}
+          <NavigationDock />
+        </LenisProvider>
       </body>
     </html>
   );
