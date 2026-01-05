@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, X, Copy, Check } from "lucide-react";
 
@@ -34,10 +34,14 @@ const emailOptions = [
 
 export function CtaCard() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
   const [maxDrag, setMaxDrag] = useState(300);
+  const [isDragging, setIsDragging] = useState(false);
   const x = useMotionValue(0);
+  const startX = useRef(0);
+  const startDragX = useRef(0);
 
   useEffect(() => {
     const updateMaxDrag = () => {
@@ -48,8 +52,6 @@ export function CtaCard() {
 
     updateMaxDrag();
     window.addEventListener("resize", updateMaxDrag);
-
-    // Recalculate after a short delay to ensure layout is complete
     const timer = setTimeout(updateMaxDrag, 100);
 
     return () => {
@@ -60,17 +62,65 @@ export function CtaCard() {
 
   const textOpacity = useTransform(x, [0, maxDrag * 0.3], [1, 0]);
 
-  const handleDragEnd = () => {
+  const handleStart = useCallback((clientX: number) => {
+    if (showOptions) return;
+    setIsDragging(true);
+    startX.current = clientX;
+    startDragX.current = x.get();
+  }, [showOptions, x]);
+
+  const handleMove = useCallback((clientX: number) => {
+    if (!isDragging || showOptions) return;
+    const delta = clientX - startX.current;
+    const newX = Math.max(0, Math.min(maxDrag, startDragX.current + delta));
+    x.set(newX);
+  }, [isDragging, showOptions, maxDrag, x]);
+
+  const handleEnd = useCallback(() => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
     const currentX = x.get();
     if (currentX >= maxDrag * 0.7) {
-      animate(x, maxDrag, { duration: 0.2 });
-      setTimeout(() => {
-        setShowOptions(true);
-      }, 200);
+      animate(x, maxDrag, { duration: 0.15, ease: "easeOut" });
+      setTimeout(() => setShowOptions(true), 150);
     } else {
-      animate(x, 0, { duration: 0.3, type: "spring", stiffness: 400, damping: 30 });
+      animate(x, 0, { duration: 0.2, ease: "easeOut" });
     }
-  };
+  }, [isDragging, maxDrag, x]);
+
+  // Touch events
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    handleStart(e.touches[0].clientX);
+  }, [handleStart]);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    handleMove(e.touches[0].clientX);
+  }, [handleMove]);
+
+  const onTouchEnd = useCallback(() => {
+    handleEnd();
+  }, [handleEnd]);
+
+  // Mouse events (for desktop)
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    handleStart(e.clientX);
+  }, [handleStart]);
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const onMouseMove = (e: MouseEvent) => handleMove(e.clientX);
+    const onMouseUp = () => handleEnd();
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [isDragging, handleMove, handleEnd]);
 
   const handleOptionClick = (action: () => void) => {
     action();
@@ -88,40 +138,39 @@ export function CtaCard() {
 
   const closeOptions = () => {
     setShowOptions(false);
-    animate(x, 0, { duration: 0.3 });
+    animate(x, 0, { duration: 0.2 });
   };
 
   return (
     <div
       ref={containerRef}
       className="relative flex items-center h-full w-full overflow-hidden"
+      style={{ contain: "layout" }}
     >
       {/* Shimmer text */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ opacity: textOpacity }}
       >
-        <span className="shimmer-text text-lg font-medium">
+        <span className={`shimmer-text text-lg font-medium ${isDragging ? "paused" : ""}`}>
           Slide to contact
         </span>
       </motion.div>
 
       {/* Draggable handle */}
-      <motion.div
-        drag={showOptions ? false : "x"}
-        dragConstraints={{ left: 0, right: maxDrag }}
-        dragElastic={0}
-        dragMomentum={false}
-        onDragEnd={handleDragEnd}
-        style={{ x }}
-        className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 hover:bg-white/15 rounded-xl cursor-grab active:cursor-grabbing transition-colors touch-pan-x will-change-transform"
-      >
-        {showOptions ? (
-          <Mail className="h-5 w-5 text-foreground" />
-        ) : (
+      {!showOptions && (
+        <motion.div
+          ref={handleRef}
+          style={{ x, touchAction: "none" }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          onMouseDown={onMouseDown}
+          className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 hover:bg-white/15 rounded-xl cursor-grab active:cursor-grabbing select-none"
+        >
           <ArrowRight className="h-5 w-5 text-foreground" />
-        )}
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* Options overlay */}
       <AnimatePresence>
@@ -130,7 +179,8 @@ export function CtaCard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center gap-3 bg-background/80 backdrop-blur-sm z-20"
+            transition={{ duration: 0.15 }}
+            className="absolute inset-0 flex items-center justify-center gap-3 bg-background/95 z-20"
           >
             {emailOptions.map((option) => (
               <button
@@ -175,6 +225,10 @@ export function CtaCard() {
           background-clip: text;
           -webkit-text-fill-color: transparent;
           animation: shimmer 2.5s linear infinite;
+        }
+
+        .shimmer-text.paused {
+          animation-play-state: paused;
         }
 
         @keyframes shimmer {

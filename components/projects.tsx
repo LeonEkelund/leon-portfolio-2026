@@ -140,16 +140,14 @@ export function Projects() {
                           </span>
                         </button>
 
-                        <AnimatePresence>
-                          {expandedProject === project.name && (
-                            <motion.div
-                              initial={{ opacity: 0, scaleY: 0.95 }}
-                              animate={{ opacity: 1, scaleY: 1 }}
-                              exit={{ opacity: 0, scaleY: 0.95 }}
-                              transition={{ duration: 0.15, ease: "easeOut" }}
-                              className="overflow-hidden origin-top will-change-transform"
-                            >
-                              <div className="ml-8 py-1 space-y-0.5">
+                        <div
+                          className="grid transition-[grid-template-rows] duration-200 ease-out"
+                          style={{
+                            gridTemplateRows: expandedProject === project.name ? "1fr" : "0fr",
+                          }}
+                        >
+                          <div className="overflow-hidden min-h-0">
+                            <div className="ml-8 py-1 space-y-0.5">
                                 {/* README file */}
                                 <div className="px-2 py-1.5 rounded-md text-sm">
                                   <div className="flex items-center gap-2">
@@ -199,10 +197,9 @@ export function Projects() {
                                     <span className="text-foreground/60">{t.toLowerCase().replace(/\s+/g, "-")}.config</span>
                                   </div>
                                 ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </motion.div>
