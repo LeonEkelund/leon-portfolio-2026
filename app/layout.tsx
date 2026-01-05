@@ -10,14 +10,6 @@ const albertSans = Albert_Sans({
   variable: "--font-sans",
 })
 
-// Common things in layout.tsx:
-//   - Background/body styling
-//   - Navbar
-//   - Footer
-//   - Theme provider
-//   - Font setup
-//   - Metadata (site title, etc.)
-
 
 
 
