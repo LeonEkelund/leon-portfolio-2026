@@ -1,12 +1,13 @@
 import { Hero } from "@/components/hero"
 import { AboutMe } from "@/components/about"
+import { Projects } from "@/components/projects"
 
-import Image from "next/image";
 export default function Home() {
   return (
     <main>
       <Hero />
       <AboutMe />
+      <Projects />
     </main>
   )
 }
