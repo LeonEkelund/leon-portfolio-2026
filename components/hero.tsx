@@ -4,11 +4,15 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Pill } from "@/components/ui/pill"
 import { ChevronDown } from "lucide-react"
+import { useLoading } from "@/components/loading-context"
 
 export function Hero() {
   const [showScrollIndicator, setShowScrollIndicator] = useState(false)
+  const { isLoaded } = useLoading()
 
   useEffect(() => {
+    if (!isLoaded) return
+
     const timer = setTimeout(() => setShowScrollIndicator(true), 300)
 
     const handleScroll = () => {
@@ -22,7 +26,7 @@ export function Hero() {
       clearTimeout(timer)
       window.removeEventListener("scroll", handleScroll)
     }
-  }, [])
+  }, [isLoaded])
 
   return (
     <section id="home" className="relative flex min-h-screen flex-col items-center
@@ -30,7 +34,7 @@ export function Hero() {
 
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{
           duration: 0.60,
           ease: "easeInOut",
@@ -44,7 +48,7 @@ export function Hero() {
 
       <motion.h1
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{
           duration: 0.60,
           ease: "easeInOut",
@@ -58,7 +62,7 @@ export function Hero() {
 
       <motion.p
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{
           duration: 0.60,
           ease: "easeInOut",

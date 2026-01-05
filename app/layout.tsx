@@ -4,6 +4,7 @@ import { NavigationDock } from "@/components/navigation-dock"
 import { Albert_Sans } from "next/font/google"
 import { Background } from "@/components/background"
 import { LenisProvider } from "@/components/lenis-provider"
+import { LoadingProvider } from "@/components/loading-context"
 import Script from "next/script"
 
 const albertSans = Albert_Sans({
@@ -32,11 +33,13 @@ export default function RootLayout({
         strategy="lazyOnload"
       />
       <body className={`${albertSans.variable}`}>
-        <LenisProvider>
-          <Background />
-          {children}
-          <NavigationDock />
-        </LenisProvider>
+        <LoadingProvider>
+          <LenisProvider>
+            <Background />
+            {children}
+            <NavigationDock />
+          </LenisProvider>
+        </LoadingProvider>
       </body>
     </html>
   );
