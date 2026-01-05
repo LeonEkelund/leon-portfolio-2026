@@ -140,14 +140,8 @@ export function Projects() {
                           </span>
                         </button>
 
-                        <div
-                          className="grid transition-[grid-template-rows] duration-200 ease-out"
-                          style={{
-                            gridTemplateRows: expandedProject === project.name ? "1fr" : "0fr",
-                          }}
-                        >
-                          <div className="overflow-hidden min-h-0">
-                            <div className="ml-8 py-1 space-y-0.5">
+                        {expandedProject === project.name && (
+                          <div className="ml-8 py-1 space-y-0.5">
                                 {/* README file */}
                                 <div className="px-2 py-1.5 rounded-md text-sm">
                                   <div className="flex items-center gap-2">
@@ -197,9 +191,8 @@ export function Projects() {
                                     <span className="text-foreground/60">{t.toLowerCase().replace(/\s+/g, "-")}.config</span>
                                   </div>
                                 ))}
-                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     ))}
                   </motion.div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, X, Copy, Check } from "lucide-react";
 
@@ -37,16 +37,16 @@ export function CtaCard() {
   const handleRef = useRef<HTMLDivElement>(null);
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [maxDrag, setMaxDrag] = useState(300);
-  const [isDragging, setIsDragging] = useState(false);
+  const maxDragRef = useRef(300);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startDragXRef = useRef(0);
   const x = useMotionValue(0);
-  const startX = useRef(0);
-  const startDragX = useRef(0);
 
   useEffect(() => {
     const updateMaxDrag = () => {
       if (containerRef.current) {
-        setMaxDrag(containerRef.current.offsetWidth - 80);
+        maxDragRef.current = containerRef.current.offsetWidth - 80;
       }
     };
 
@@ -60,67 +60,93 @@ export function CtaCard() {
     };
   }, []);
 
-  const textOpacity = useTransform(x, [0, maxDrag * 0.3], [1, 0]);
-
-  const handleStart = useCallback((clientX: number) => {
-    if (showOptions) return;
-    setIsDragging(true);
-    startX.current = clientX;
-    startDragX.current = x.get();
-  }, [showOptions, x]);
-
-  const handleMove = useCallback((clientX: number) => {
-    if (!isDragging || showOptions) return;
-    const delta = clientX - startX.current;
-    const newX = Math.max(0, Math.min(maxDrag, startDragX.current + delta));
-    x.set(newX);
-  }, [isDragging, showOptions, maxDrag, x]);
-
-  const handleEnd = useCallback(() => {
-    if (!isDragging) return;
-    setIsDragging(false);
-
-    const currentX = x.get();
-    if (currentX >= maxDrag * 0.7) {
-      animate(x, maxDrag, { duration: 0.15, ease: "easeOut" });
-      setTimeout(() => setShowOptions(true), 150);
-    } else {
-      animate(x, 0, { duration: 0.2, ease: "easeOut" });
-    }
-  }, [isDragging, maxDrag, x]);
-
-  // Touch events
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    handleStart(e.touches[0].clientX);
-  }, [handleStart]);
-
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    handleMove(e.touches[0].clientX);
-  }, [handleMove]);
-
-  const onTouchEnd = useCallback(() => {
-    handleEnd();
-  }, [handleEnd]);
-
-  // Mouse events (for desktop)
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
-    handleStart(e.clientX);
-  }, [handleStart]);
+  const textOpacity = useTransform(x, [0, 100], [1, 0]);
 
   useEffect(() => {
-    if (!isDragging) return;
+    const handle = handleRef.current;
+    if (!handle) return;
 
-    const onMouseMove = (e: MouseEvent) => handleMove(e.clientX);
-    const onMouseUp = () => handleEnd();
+    const onTouchStart = (e: TouchEvent) => {
+      if (showOptions) return;
+      isDraggingRef.current = true;
+      startXRef.current = e.touches[0].clientX;
+      startDragXRef.current = x.get();
+    };
 
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDraggingRef.current || showOptions) return;
+      e.preventDefault();
+      const delta = e.touches[0].clientX - startXRef.current;
+      const newX = Math.max(0, Math.min(maxDragRef.current, startDragXRef.current + delta));
+      x.set(newX);
+    };
+
+    const onTouchEnd = () => {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+
+      const currentX = x.get();
+      if (currentX >= maxDragRef.current * 0.7) {
+        animate(x, maxDragRef.current, { duration: 0.15, ease: "easeOut" });
+        setTimeout(() => setShowOptions(true), 150);
+      } else {
+        animate(x, 0, { duration: 0.2, ease: "easeOut" });
+      }
+    };
+
+    handle.addEventListener("touchstart", onTouchStart, { passive: true });
+    handle.addEventListener("touchmove", onTouchMove, { passive: false });
+    handle.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    return () => {
+      handle.removeEventListener("touchstart", onTouchStart);
+      handle.removeEventListener("touchmove", onTouchMove);
+      handle.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [showOptions, x]);
+
+  // Mouse events for desktop
+  useEffect(() => {
+    const handle = handleRef.current;
+    if (!handle) return;
+
+    const onMouseDown = (e: MouseEvent) => {
+      if (showOptions) return;
+      isDraggingRef.current = true;
+      startXRef.current = e.clientX;
+      startDragXRef.current = x.get();
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current || showOptions) return;
+      const delta = e.clientX - startXRef.current;
+      const newX = Math.max(0, Math.min(maxDragRef.current, startDragXRef.current + delta));
+      x.set(newX);
+    };
+
+    const onMouseUp = () => {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+
+      const currentX = x.get();
+      if (currentX >= maxDragRef.current * 0.7) {
+        animate(x, maxDragRef.current, { duration: 0.15, ease: "easeOut" });
+        setTimeout(() => setShowOptions(true), 150);
+      } else {
+        animate(x, 0, { duration: 0.2, ease: "easeOut" });
+      }
+    };
+
+    handle.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
 
     return () => {
+      handle.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, [isDragging, handleMove, handleEnd]);
+  }, [showOptions, x]);
 
   const handleOptionClick = (action: () => void) => {
     action();
@@ -145,14 +171,13 @@ export function CtaCard() {
     <div
       ref={containerRef}
       className="relative flex items-center h-full w-full overflow-hidden"
-      style={{ contain: "layout" }}
     >
       {/* Shimmer text */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ opacity: textOpacity }}
       >
-        <span className={`shimmer-text text-lg font-medium ${isDragging ? "paused" : ""}`}>
+        <span className="shimmer-text text-lg font-medium">
           Slide to contact
         </span>
       </motion.div>
@@ -162,10 +187,6 @@ export function CtaCard() {
         <motion.div
           ref={handleRef}
           style={{ x, touchAction: "none" }}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onMouseDown={onMouseDown}
           className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 hover:bg-white/15 rounded-xl cursor-grab active:cursor-grabbing select-none"
         >
           <ArrowRight className="h-5 w-5 text-foreground" />
@@ -180,7 +201,7 @@ export function CtaCard() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="absolute inset-0 flex items-center justify-center gap-3 bg-background/95 z-20"
+            className="absolute inset-0 flex items-center justify-center gap-3 bg-background z-20"
           >
             {emailOptions.map((option) => (
               <button
@@ -225,10 +246,6 @@ export function CtaCard() {
           background-clip: text;
           -webkit-text-fill-color: transparent;
           animation: shimmer 2.5s linear infinite;
-        }
-
-        .shimmer-text.paused {
-          animation-play-state: paused;
         }
 
         @keyframes shimmer {
