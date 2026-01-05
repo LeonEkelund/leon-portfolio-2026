@@ -4,6 +4,7 @@ import { NavigationDock } from "@/components/navigation-dock"
 import { Albert_Sans } from "next/font/google"
 import { Background } from "@/components/background"
 import { LenisProvider } from "@/components/lenis-provider"
+import Script from "next/script"
 
 const albertSans = Albert_Sans({
   subsets: ["latin"],
@@ -25,6 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Script
+        src="https://cloud.umami.is/script.js"
+        data-website-id="4d029f88-1ca5-413f-a642-6fd3cf8f32e9"
+        strategy="lazyOnload"
+      />
       <body className={`${albertSans.variable}`}>
         <LenisProvider>
           <Background />
