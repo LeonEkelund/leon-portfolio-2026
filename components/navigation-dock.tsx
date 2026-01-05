@@ -14,9 +14,17 @@ export function NavigationDock() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
+      const maxScrollY = document.documentElement.scrollHeight - window.innerHeight
 
       // Add threshold to prevent jitter
       if (Math.abs(currentScrollY - lastScrollY.current) < 10) return
+
+      // Ignore scroll events during iOS overscroll bounce at bottom
+      const isNearBottom = currentScrollY >= maxScrollY - 50
+      if (isNearBottom && currentScrollY < lastScrollY.current) {
+        lastScrollY.current = currentScrollY
+        return
+      }
 
       setHidden(currentScrollY > lastScrollY.current && currentScrollY > 100)
       lastScrollY.current = currentScrollY
