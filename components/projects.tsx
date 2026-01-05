@@ -87,9 +87,9 @@ export function Projects() {
             <div className="w-14" /> {/* Spacer for centering */}
           </div>
 
-          <div className="flex min-h-[500px]">
+          <div className="flex min-h-[350px] sm:min-h-[500px]">
             {/* Sidebar */}
-            <div className="w-48 border-r border-white/10 bg-white/[0.02] p-2">
+            <div className="w-32 sm:w-48 border-r border-white/10 bg-white/[0.02] p-2">
               <div className="text-xs text-foreground/40 font-medium px-2 py-1 mb-1">
                 Favorites
               </div>
@@ -135,7 +135,7 @@ export function Projects() {
                             }`}
                           />
                           <Folder className="w-4 h-4 text-blue-400" />
-                          <span className="text-foreground/80 group-hover:text-foreground">
+                          <span className="text-foreground/80 group-hover:text-foreground whitespace-nowrap">
                             {project.name}
                           </span>
                         </button>
@@ -222,7 +222,7 @@ export function Projects() {
                       download
                       className="flex items-center gap-3 px-3 py-3 rounded-md hover:bg-white/5 transition-colors group"
                     >
-                      <FileDown className="w-8 h-8 text-red-400" />
+                      <FileDown className="w-6 h-6 sm:w-8 sm:h-8 text-red-400" />
                       <div>
                         <div className="text-sm text-foreground/80 group-hover:text-foreground">
                           Leon_Ekelund_Resume.pdf

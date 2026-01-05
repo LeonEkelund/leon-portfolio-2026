@@ -21,6 +21,7 @@ export function GithubContributions() {
   const [loading, setLoading] = useState(true);
   const [totalContributions, setTotalContributions] = useState(0);
   const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
+  const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
     fetch("https://github-contributions-api.jogruber.de/v4/leonekelund?y=last")
@@ -62,33 +63,46 @@ export function GithubContributions() {
   };
 
   return (
-    <div className="flex items-center justify-between h-full px-8 py-4">
-      {/* Left side - Stats */}
-      <div className="flex flex-col gap-1">
-        <p className="text-3xl font-semibold text-foreground">
+    <div className="relative flex sm:flex-row items-center justify-center sm:justify-between h-full px-4 sm:px-8">
+      {/* Stats - absolute on mobile, normal on desktop */}
+      <div className="absolute top-3 left-0 right-0 text-center sm:relative sm:top-auto sm:left-auto sm:right-auto sm:text-left flex flex-col gap-0.5 sm:gap-1 shrink-0">
+        <p className="text-xl sm:text-3xl font-semibold text-foreground">
           {hoveredDay ? hoveredDay.count : totalContributions}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           {hoveredDay ? (
             <>contribution{hoveredDay.count !== 1 ? 's' : ''} on {formatDate(hoveredDay.date)}</>
           ) : (
-            <>contributions in the last 2 months</>
+            <>contributions (2 months)</>
           )}
         </p>
       </div>
 
-      {/* Right side - Grid */}
+      {/* Grid - centered */}
       <div
-        className="flex gap-[6px]"
-        onMouseLeave={() => setHoveredDay(null)}
+        className="flex gap-[5px] sm:gap-[6px]"
+        onMouseLeave={() => {
+          if (!isSelected) setHoveredDay(null)
+        }}
       >
         {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="flex flex-col gap-[6px]">
+          <div key={weekIndex} className="flex flex-col gap-[5px] sm:gap-[6px]">
             {week.map((day, dayIndex) => (
               <div
                 key={dayIndex}
-                className={`w-5 h-5 rounded-md ${levelColors[day.level]} transition-all duration-200 cursor-pointer hover:scale-125 hover:z-10`}
-                onMouseEnter={() => setHoveredDay(day)}
+                className={`w-5 h-5 sm:w-5 sm:h-5 rounded-[4px] sm:rounded-md ${levelColors[day.level]} transition-all duration-200 cursor-pointer hover:scale-125 hover:z-10`}
+                onMouseEnter={() => {
+                  if (!isSelected) setHoveredDay(day)
+                }}
+                onClick={() => {
+                  if (hoveredDay?.date === day.date && isSelected) {
+                    setHoveredDay(null)
+                    setIsSelected(false)
+                  } else {
+                    setHoveredDay(day)
+                    setIsSelected(true)
+                  }
+                }}
               />
             ))}
           </div>

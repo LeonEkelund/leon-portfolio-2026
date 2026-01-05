@@ -40,9 +40,22 @@ export function CtaCard() {
   const x = useMotionValue(0);
 
   useEffect(() => {
-    if (containerRef.current) {
-      setMaxDrag(containerRef.current.offsetWidth - 80);
-    }
+    const updateMaxDrag = () => {
+      if (containerRef.current) {
+        setMaxDrag(containerRef.current.offsetWidth - 80);
+      }
+    };
+
+    updateMaxDrag();
+    window.addEventListener("resize", updateMaxDrag);
+
+    // Recalculate after a short delay to ensure layout is complete
+    const timer = setTimeout(updateMaxDrag, 100);
+
+    return () => {
+      window.removeEventListener("resize", updateMaxDrag);
+      clearTimeout(timer);
+    };
   }, []);
 
   const textOpacity = useTransform(x, [0, maxDrag * 0.3], [1, 0]);
@@ -137,7 +150,7 @@ export function CtaCard() {
             </button>
             <button
               onClick={closeOptions}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground"
+              className="absolute right-2 top-2 sm:right-3 sm:top-1/2 sm:-translate-y-1/2 p-1.5 rounded-lg hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4" />
             </button>
