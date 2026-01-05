@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { NavigationDock } from "@/components/navigation-dock"
 import { Albert_Sans } from "next/font/google"
-import { Pill } from "@/components/ui/pill"
 import { Background } from "@/components/background"
 import { LenisProvider } from "@/components/lenis-provider"
 
@@ -29,9 +28,6 @@ export default function RootLayout({
       <body className={`${albertSans.variable}`}>
         <LenisProvider>
           <Background />
-          <a href="mailto:leongudmundssonekelund@gmail.com" className="fixed top-4 right-4 z-50">
-            <Pill>Get in touch</Pill>
-          </a>
           {children}
           <NavigationDock />
         </LenisProvider>

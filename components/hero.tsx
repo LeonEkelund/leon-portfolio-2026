@@ -1,12 +1,31 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Pill } from "@/components/ui/pill"
-import { Linkedin, Github } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 
 export function Hero() {
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowScrollIndicator(true), 300)
+
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowScrollIndicator(false)
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
   return (
-    <section id="home" className="flex min-h-screen flex-col items-center
+    <section id="home" className="relative flex min-h-screen flex-col items-center
      justify-center px-4 gap-2">
 
       <motion.div
@@ -50,28 +69,29 @@ export function Hero() {
         A <span className="opacity-70">creative</span> front-end developer.
       </motion.p>
 
-      <div className="flex gap-4 mt-6">
-        {[
-          { icon: Linkedin, href: "https://www.linkedin.com/in/leon-ekelund-50050720a/" },
-          { icon: Github, href: "https://github.com/LeonEkelund" },
-        ].map((social, i) => (
-          <motion.a
-            key={i}
-            href={social.href}
-            target="_blank"
+      <AnimatePresence>
+        {showScrollIndicator && (
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{
-              duration: 0.60,
-              ease: "easeInOut",
-              delay: 0.24 + i * 0.08,
-            }}
-            className="text-foreground/50 hover:text-foreground transition-colors"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="absolute bottom-8 right-8"
           >
-            <social.icon className="h-5 w-5" />
-          </motion.a>
-        ))}
-      </div>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="text-foreground/70"
+            >
+              <ChevronDown className="h-10 w-10" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </section>
   )

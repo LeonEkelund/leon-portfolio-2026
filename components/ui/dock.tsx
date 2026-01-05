@@ -1,6 +1,6 @@
 "use client"
 
-import React, { PropsWithChildren, useRef } from "react"
+import React, { PropsWithChildren, useRef, useState } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import {
   motion,
@@ -8,6 +8,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  AnimatePresence,
 } from "motion/react"
 import type { MotionProps } from "motion/react"
 
@@ -29,7 +30,7 @@ const DEFAULT_DISTANCE = 140
 const DEFAULT_DISABLEMAGNIFICATION = false
 
 const dockVariants = cva(
-  "mx-auto flex h-[58px] w-max items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background/60 p-2 backdrop-blur-xl shadow-lg shadow-black/10"
+  "mx-auto flex h-[68px] w-max items-center justify-center gap-2 rounded-2xl border border-white/5 bg-black/10 p-3 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
 )
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(
@@ -99,6 +100,7 @@ export interface DockIconProps extends Omit<
   className?: string
   children?: React.ReactNode
   props?: PropsWithChildren
+  tooltip?: string
 }
 
 const DockIcon = ({
@@ -109,9 +111,11 @@ const DockIcon = ({
   mouseX,
   className,
   children,
+  tooltip,
   ...props
 }: DockIconProps) => {
   const ref = useRef<HTMLDivElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
   const padding = Math.max(6, size * 0.2)
   const defaultMouseX = useMotionValue(Infinity)
 
@@ -139,13 +143,39 @@ const DockIcon = ({
       ref={ref}
       style={{ width: scaleSize, height: scaleSize, padding }}
       className={cn(
-        "flex aspect-square cursor-pointer items-center justify-center rounded-full",
+        "relative flex aspect-square cursor-pointer items-center justify-center rounded-full",
         disableMagnification && "hover:bg-muted-foreground transition-colors",
         className
       )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
+      <AnimatePresence>
+        {tooltip && isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 0.15 }}
+            className="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-foreground text-background text-xs font-medium whitespace-nowrap"
+          >
+            {tooltip}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="size-full">{children}</div>
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ duration: 0.15 }}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-foreground"
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

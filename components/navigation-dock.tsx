@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Mail } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 import { useState, useEffect, useRef } from "react"
+import { motion } from "framer-motion"
 
 export function NavigationDock() {
   const [hidden, setHidden] = useState(false)
@@ -26,28 +27,40 @@ export function NavigationDock() {
   }, [])
 
   return (
-    <Dock
-      className={`fixed bottom-10 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${
-        hidden ? "translate-y-[calc(100%+40px)]" : "translate-y-0"
-      }`}
-      iconMagnification={60}
-      iconDistance={80}
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+        delay: 0.5
+      }}
+      className="fixed bottom-10 left-0 right-0 z-50"
     >
-      <DockIcon>
-        <Link href="https://github.com/LeonEkelund" target="_blank" className="block size-full">
-          <SiGithub className="size-full" />
-        </Link>
-      </DockIcon>
-      <DockIcon>
-        <Link href="https://www.linkedin.com/in/leon-ekelund-50050720a/" target="_blank" className="block size-full">
-          <SiLinkedin className="size-full" />
-        </Link>
-      </DockIcon>
-      <DockIcon>
-        <Link href="mailto:leongudmundssonekelund@gmail.com" className="block size-full">
-          <Mail className="size-full" />
-        </Link>
-      </DockIcon>
-    </Dock>
+      <Dock
+        className={`transition-transform duration-300 ease-in-out ${
+          hidden ? "translate-y-[calc(100%+40px)]" : "translate-y-0"
+        }`}
+        iconMagnification={60}
+        iconDistance={80}
+      >
+        <DockIcon tooltip="GitHub">
+          <Link href="https://github.com/LeonEkelund" target="_blank" className="size-full">
+            <SiGithub className="size-full" />
+          </Link>
+        </DockIcon>
+        <DockIcon tooltip="LinkedIn">
+          <Link href="https://www.linkedin.com/in/leon-ekelund-50050720a/" target="_blank" className="size-full">
+            <SiLinkedin className="size-full" />
+          </Link>
+        </DockIcon>
+        <DockIcon tooltip="Email">
+          <Link href="mailto:leongudmundssonekelund@gmail.com" className="size-full">
+            <Mail className="size-full" />
+          </Link>
+        </DockIcon>
+      </Dock>
+    </motion.div>
   )
 }
