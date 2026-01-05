@@ -111,9 +111,10 @@ export function CtaCard() {
         drag={showOptions ? false : "x"}
         dragConstraints={{ left: 0, right: maxDrag }}
         dragElastic={0}
+        dragMomentum={false}
         onDragEnd={handleDragEnd}
         style={{ x }}
-        className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 hover:bg-white/15 rounded-xl cursor-grab active:cursor-grabbing transition-colors"
+        className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 hover:bg-white/15 rounded-xl cursor-grab active:cursor-grabbing transition-colors touch-pan-x will-change-transform"
       >
         {showOptions ? (
           <Mail className="h-5 w-5 text-foreground" />

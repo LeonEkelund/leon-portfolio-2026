@@ -143,11 +143,11 @@ export function Projects() {
                         <AnimatePresence>
                           {expandedProject === project.name && (
                             <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
+                              initial={{ opacity: 0, scaleY: 0.95 }}
+                              animate={{ opacity: 1, scaleY: 1 }}
+                              exit={{ opacity: 0, scaleY: 0.95 }}
+                              transition={{ duration: 0.15, ease: "easeOut" }}
+                              className="overflow-hidden origin-top will-change-transform"
                             >
                               <div className="ml-8 py-1 space-y-0.5">
                                 {/* README file */}
