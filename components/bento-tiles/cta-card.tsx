@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, useMotionValue, useTransform, animate, AnimatePresence, PanInfo } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, X, Copy, Check } from "lucide-react";
 
 const EMAIL = "leongudmundssonekelund@gmail.com";
@@ -25,39 +25,104 @@ const emailOptions = [
 
 export function CtaCard() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [maxDrag, setMaxDrag] = useState(300);
-  const x = useMotionValue(0);
 
   useEffect(() => {
-    const updateMaxDrag = () => {
-      if (containerRef.current) {
-        setMaxDrag(containerRef.current.offsetWidth - 80);
+    const container = containerRef.current;
+    const handle = handleRef.current;
+    const text = textRef.current;
+    if (!container || !handle || !text) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
+    let maxDrag = container.offsetWidth - 80;
+
+    const updatePosition = (x: number) => {
+      handle.style.transform = `translateX(${x}px)`;
+      text.style.opacity = String(Math.max(0, 1 - x / (maxDrag * 0.3)));
+    };
+
+    const onStart = (clientX: number) => {
+      if (showOptions) return;
+      isDragging = true;
+      startX = clientX - currentX;
+      maxDrag = container.offsetWidth - 80;
+    };
+
+    const onMove = (clientX: number) => {
+      if (!isDragging) return;
+      const newX = Math.max(0, Math.min(maxDrag, clientX - startX));
+      currentX = newX;
+      updatePosition(newX);
+    };
+
+    const onEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      if (currentX >= maxDrag * 0.7) {
+        // Animate to end
+        handle.style.transition = 'transform 0.15s ease-out';
+        handle.style.transform = `translateX(${maxDrag}px)`;
+        currentX = maxDrag;
+        setTimeout(() => {
+          handle.style.transition = '';
+          setShowOptions(true);
+        }, 150);
+      } else {
+        // Snap back
+        handle.style.transition = 'transform 0.2s ease-out';
+        handle.style.transform = 'translateX(0px)';
+        text.style.transition = 'opacity 0.2s ease-out';
+        text.style.opacity = '1';
+        currentX = 0;
+        setTimeout(() => {
+          handle.style.transition = '';
+          text.style.transition = '';
+        }, 200);
       }
     };
 
-    updateMaxDrag();
-    window.addEventListener("resize", updateMaxDrag);
-    const timer = setTimeout(updateMaxDrag, 100);
+    // Touch events
+    const onTouchStart = (e: TouchEvent) => onStart(e.touches[0].clientX);
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      onMove(e.touches[0].clientX);
+    };
+    const onTouchEnd = () => onEnd();
+
+    // Mouse events
+    const onMouseDown = (e: MouseEvent) => onStart(e.clientX);
+    const onMouseMove = (e: MouseEvent) => onMove(e.clientX);
+    const onMouseUp = () => onEnd();
+
+    handle.addEventListener('touchstart', onTouchStart, { passive: true });
+    handle.addEventListener('touchmove', onTouchMove, { passive: false });
+    handle.addEventListener('touchend', onTouchEnd);
+    handle.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    // Reset on showOptions change
+    if (!showOptions) {
+      currentX = 0;
+      handle.style.transform = 'translateX(0px)';
+      text.style.opacity = '1';
+    }
 
     return () => {
-      window.removeEventListener("resize", updateMaxDrag);
-      clearTimeout(timer);
+      handle.removeEventListener('touchstart', onTouchStart);
+      handle.removeEventListener('touchmove', onTouchMove);
+      handle.removeEventListener('touchend', onTouchEnd);
+      handle.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
     };
-  }, []);
-
-  const textOpacity = useTransform(x, [0, 100], [1, 0]);
-
-  const handleDragEnd = (_: never, info: PanInfo) => {
-    const currentX = x.get();
-    if (currentX >= maxDrag * 0.7) {
-      animate(x, maxDrag, { duration: 0.1 });
-      setTimeout(() => setShowOptions(true), 100);
-    } else {
-      animate(x, 0, { duration: 0.15 });
-    }
-  };
+  }, [showOptions]);
 
   const handleOptionClick = (action: () => void) => {
     action();
@@ -75,7 +140,6 @@ export function CtaCard() {
 
   const closeOptions = () => {
     setShowOptions(false);
-    animate(x, 0, { duration: 0.15 });
   };
 
   return (
@@ -84,28 +148,21 @@ export function CtaCard() {
       className="relative flex items-center h-full w-full overflow-hidden"
     >
       {/* Shimmer text */}
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        style={{ opacity: textOpacity }}
-      >
-        <span className="text-lg font-medium text-white/40">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <span ref={textRef} className="shimmer-text text-lg font-medium">
           Slide to contact
         </span>
-      </motion.div>
+      </div>
 
       {/* Draggable handle */}
       {!showOptions && (
-        <motion.div
-          drag="x"
-          dragConstraints={{ left: 0, right: maxDrag }}
-          dragElastic={0}
-          dragMomentum={false}
-          onDragEnd={handleDragEnd}
-          style={{ x }}
-          className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 rounded-xl cursor-grab active:cursor-grabbing select-none touch-none"
+        <div
+          ref={handleRef}
+          className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 rounded-xl cursor-grab active:cursor-grabbing select-none"
+          style={{ touchAction: 'none' }}
         >
           <ArrowRight className="h-5 w-5 text-foreground" />
-        </motion.div>
+        </div>
       )}
 
       {/* Options overlay */}
@@ -144,6 +201,33 @@ export function CtaCard() {
           </motion.div>
         )}
       </AnimatePresence>
+      <style jsx>{`
+        .shimmer-text {
+          color: rgba(255, 255, 255, 0.4);
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0.4) 40%,
+            rgba(255, 255, 255, 1) 50%,
+            rgba(255, 255, 255, 0.4) 60%,
+            rgba(255, 255, 255, 0.4) 100%
+          );
+          background-size: 300% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer 2.5s linear infinite;
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
