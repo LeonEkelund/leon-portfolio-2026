@@ -55,9 +55,9 @@ export function Projects() {
   const [expandedProject, setExpandedProject] = useState<string | null>(null)
 
   return (
-    <section id="projects" className="relative min-h-screen flex items-center justify-center px-4 py-20">
+    <section id="projects" className="relative min-h-screen flex items-start justify-center px-4 py-20 pt-32">
       {/* White vignette glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      <div className="absolute top-20 left-0 right-0 flex justify-center pointer-events-none -z-10">
         <div className="w-[800px] h-[600px] bg-white/8 rounded-full blur-[120px]" />
       </div>
 
