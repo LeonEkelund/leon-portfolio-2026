@@ -140,8 +140,15 @@ export function Projects() {
                           </span>
                         </button>
 
-                        {expandedProject === project.name && (
-                          <div className="ml-8 py-1 space-y-0.5">
+                        <AnimatePresence>
+                          {expandedProject === project.name && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            transition={{ duration: 0.15, ease: "easeOut" }}
+                            className="ml-8 py-1 space-y-0.5"
+                          >
                                 {/* README file */}
                                 <div className="px-2 py-1.5 rounded-md text-sm">
                                   <div className="flex items-center gap-2">
@@ -191,8 +198,9 @@ export function Projects() {
                                     <span className="text-foreground/60">{t.toLowerCase().replace(/\s+/g, "-")}.config</span>
                                   </div>
                                 ))}
-                          </div>
+                          </motion.div>
                         )}
+                        </AnimatePresence>
                       </div>
                     ))}
                   </motion.div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, X, Copy, Check } from "lucide-react";
 
 const EMAIL = "leongudmundssonekelund@gmail.com";
@@ -23,106 +23,116 @@ const emailOptions = [
   },
 ];
 
-export function CtaCard() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const handleRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
+// Mobile tap version
+function MobileCtaCard() {
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const handleOptionClick = (action: () => void) => {
+    action();
+    setShowOptions(false);
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(EMAIL);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+      setShowOptions(false);
+    }, 1000);
+  };
+
+  return (
+    <div className="relative flex items-center justify-center h-full w-full">
+      <AnimatePresence mode="wait">
+        {!showOptions ? (
+          <motion.button
+            key="contact"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            onClick={() => setShowOptions(true)}
+            className="flex items-center gap-2 px-4 py-2 touch-manipulation"
+          >
+            <Mail className="w-5 h-5 text-foreground/60" />
+            <span className="text-lg font-medium text-foreground/60">Get in touch</span>
+          </motion.button>
+        ) : (
+          <motion.div
+            key="options"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="flex items-center gap-3"
+          >
+            {emailOptions.map((option) => (
+              <button
+                key={option.label}
+                onClick={() => handleOptionClick(option.action)}
+                className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
+              >
+                <option.icon />
+                <span className="text-xs text-muted-foreground">{option.label}</span>
+              </button>
+            ))}
+            <button
+              onClick={handleCopyEmail}
+              className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
+            >
+              {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+              <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy"}</span>
+            </button>
+            <button
+              onClick={() => setShowOptions(false)}
+              className="p-2 rounded-lg active:bg-white/15 transition-colors text-muted-foreground touch-manipulation"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// Desktop slide version
+function DesktopCtaCard() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [maxDrag, setMaxDrag] = useState(300);
+  const x = useMotionValue(0);
+
   useEffect(() => {
-    const container = containerRef.current;
-    const handle = handleRef.current;
-    const text = textRef.current;
-    if (!container || !handle || !text) return;
-
-    let isDragging = false;
-    let startX = 0;
-    let currentX = 0;
-    let maxDrag = container.offsetWidth - 80;
-
-    const updatePosition = (x: number) => {
-      handle.style.transform = `translateX(${x}px)`;
-      text.style.opacity = String(Math.max(0, 1 - x / (maxDrag * 0.3)));
-    };
-
-    const onStart = (clientX: number) => {
-      if (showOptions) return;
-      isDragging = true;
-      startX = clientX - currentX;
-      maxDrag = container.offsetWidth - 80;
-    };
-
-    const onMove = (clientX: number) => {
-      if (!isDragging) return;
-      const newX = Math.max(0, Math.min(maxDrag, clientX - startX));
-      currentX = newX;
-      updatePosition(newX);
-    };
-
-    const onEnd = () => {
-      if (!isDragging) return;
-      isDragging = false;
-
-      if (currentX >= maxDrag * 0.7) {
-        // Animate to end
-        handle.style.transition = 'transform 0.15s ease-out';
-        handle.style.transform = `translateX(${maxDrag}px)`;
-        currentX = maxDrag;
-        setTimeout(() => {
-          handle.style.transition = '';
-          setShowOptions(true);
-        }, 150);
-      } else {
-        // Snap back
-        handle.style.transition = 'transform 0.2s ease-out';
-        handle.style.transform = 'translateX(0px)';
-        text.style.transition = 'opacity 0.2s ease-out';
-        text.style.opacity = '1';
-        currentX = 0;
-        setTimeout(() => {
-          handle.style.transition = '';
-          text.style.transition = '';
-        }, 200);
+    const updateMaxDrag = () => {
+      if (containerRef.current) {
+        setMaxDrag(containerRef.current.offsetWidth - 80);
       }
     };
 
-    // Touch events
-    const onTouchStart = (e: TouchEvent) => onStart(e.touches[0].clientX);
-    const onTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-      onMove(e.touches[0].clientX);
-    };
-    const onTouchEnd = () => onEnd();
-
-    // Mouse events
-    const onMouseDown = (e: MouseEvent) => onStart(e.clientX);
-    const onMouseMove = (e: MouseEvent) => onMove(e.clientX);
-    const onMouseUp = () => onEnd();
-
-    handle.addEventListener('touchstart', onTouchStart, { passive: true });
-    handle.addEventListener('touchmove', onTouchMove, { passive: false });
-    handle.addEventListener('touchend', onTouchEnd);
-    handle.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-
-    // Reset on showOptions change
-    if (!showOptions) {
-      currentX = 0;
-      handle.style.transform = 'translateX(0px)';
-      text.style.opacity = '1';
-    }
+    updateMaxDrag();
+    window.addEventListener("resize", updateMaxDrag);
+    const timer = setTimeout(updateMaxDrag, 100);
 
     return () => {
-      handle.removeEventListener('touchstart', onTouchStart);
-      handle.removeEventListener('touchmove', onTouchMove);
-      handle.removeEventListener('touchend', onTouchEnd);
-      handle.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener("resize", updateMaxDrag);
+      clearTimeout(timer);
     };
-  }, [showOptions]);
+  }, []);
+
+  const textOpacity = useTransform(x, [0, 100], [1, 0]);
+
+  const handleDragEnd = () => {
+    const currentX = x.get();
+    if (currentX >= maxDrag * 0.7) {
+      animate(x, maxDrag, { duration: 0.1 });
+      setTimeout(() => setShowOptions(true), 100);
+    } else {
+      animate(x, 0, { duration: 0.15 });
+    }
+  };
 
   const handleOptionClick = (action: () => void) => {
     action();
@@ -140,6 +150,7 @@ export function CtaCard() {
 
   const closeOptions = () => {
     setShowOptions(false);
+    animate(x, 0, { duration: 0.15 });
   };
 
   return (
@@ -148,21 +159,28 @@ export function CtaCard() {
       className="relative flex items-center h-full w-full overflow-hidden"
     >
       {/* Shimmer text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span ref={textRef} className="shimmer-text text-lg font-medium">
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ opacity: textOpacity }}
+      >
+        <span className="shimmer-text text-lg font-medium">
           Slide to contact
         </span>
-      </div>
+      </motion.div>
 
       {/* Draggable handle */}
       {!showOptions && (
-        <div
-          ref={handleRef}
-          className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 rounded-xl cursor-grab active:cursor-grabbing select-none"
-          style={{ touchAction: 'none' }}
+        <motion.div
+          drag="x"
+          dragConstraints={{ left: 0, right: maxDrag }}
+          dragElastic={0}
+          dragMomentum={false}
+          onDragEnd={handleDragEnd}
+          style={{ x }}
+          className="relative z-10 flex items-center justify-center ml-2 w-14 h-[calc(100%-16px)] bg-white/10 hover:bg-white/15 rounded-xl cursor-grab active:cursor-grabbing select-none"
         >
           <ArrowRight className="h-5 w-5 text-foreground" />
-        </div>
+        </motion.div>
       )}
 
       {/* Options overlay */}
@@ -179,7 +197,7 @@ export function CtaCard() {
               <button
                 key={option.label}
                 onClick={() => handleOptionClick(option.action)}
-                className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 active:bg-white/10"
+                className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
               >
                 <option.icon />
                 <span className="text-xs text-muted-foreground">{option.label}</span>
@@ -187,20 +205,21 @@ export function CtaCard() {
             ))}
             <button
               onClick={handleCopyEmail}
-              className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 active:bg-white/10"
+              className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
             >
               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
               <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy"}</span>
             </button>
             <button
               onClick={closeOptions}
-              className="absolute right-2 top-2 sm:right-3 sm:top-1/2 sm:-translate-y-1/2 p-1.5 rounded-lg active:bg-white/10 text-muted-foreground"
+              className="absolute right-2 top-2 sm:right-3 sm:top-1/2 sm:-translate-y-1/2 p-1.5 rounded-lg hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4" />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
+
       <style jsx>{`
         .shimmer-text {
           color: rgba(255, 255, 255, 0.4);
@@ -230,4 +249,22 @@ export function CtaCard() {
       `}</style>
     </div>
   );
+}
+
+// Main component that switches based on device
+export function CtaCard() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  // Prevent hydration mismatch - render nothing until mounted
+  if (!mounted) {
+    return <div className="relative flex items-center justify-center h-full w-full" />;
+  }
+
+  return isMobile ? <MobileCtaCard /> : <DesktopCtaCard />;
 }
