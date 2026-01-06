@@ -46,4 +46,5 @@ body {
 
 .animate-marquee {
   animation: marquee linear infinite;
+  will-change: transform;
 }

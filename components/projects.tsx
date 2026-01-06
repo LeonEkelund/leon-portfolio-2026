@@ -127,7 +127,7 @@ export function Projects() {
                           onClick={() => setExpandedProject(
                             expandedProject === project.name ? null : project.name
                           )}
-                          className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-sm hover:bg-white/5 transition-colors group"
+                          className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-sm hover:bg-white/5 transition-colors group touch-manipulation"
                         >
                           <ChevronRight
                             className={`w-4 h-4 text-foreground/40 transition-transform ${
