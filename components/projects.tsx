@@ -89,22 +89,22 @@ export function Projects() {
 
           <div className="flex min-h-[520px] sm:min-h-[650px]">
             {/* Sidebar */}
-            <div className="w-40 sm:w-56 border-r border-white/10 bg-white/[0.02] p-3">
-              <div className="text-sm text-foreground/40 font-medium px-3 py-1.5 mb-1">
+            <div className="w-28 sm:w-56 border-r border-white/10 bg-white/[0.02] p-2 sm:p-3">
+              <div className="text-xs sm:text-sm text-foreground/40 font-medium px-2 sm:px-3 py-1 sm:py-1.5 mb-1">
                 Favorites
               </div>
               {sidebarItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveItem(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-base transition-colors ${
+                  className={`w-full flex items-center gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-sm sm:text-base transition-colors ${
                     activeItem === item.id
                       ? "bg-white/10 text-foreground"
                       : "text-foreground/60 hover:bg-white/5 hover:text-foreground"
                   }`}
                 >
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
+                  <item.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="truncate">{item.label}</span>
                 </button>
               ))}
             </div>

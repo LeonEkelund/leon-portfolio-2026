@@ -48,10 +48,10 @@ function MobileCtaCard() {
         {!showOptions ? (
           <motion.button
             key="contact"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             onClick={() => setShowOptions(true)}
             className="flex items-center gap-2 px-4 py-2 touch-manipulation"
           >
@@ -61,35 +61,44 @@ function MobileCtaCard() {
         ) : (
           <motion.div
             key="options"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="flex items-center gap-3"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="flex items-center gap-2 sm:gap-3 px-2"
           >
-            {emailOptions.map((option) => (
-              <button
+            {emailOptions.map((option, index) => (
+              <motion.button
                 key={option.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
                 onClick={() => handleOptionClick(option.action)}
-                className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
+                className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
               >
                 <option.icon />
                 <span className="text-xs text-muted-foreground">{option.label}</span>
-              </button>
+              </motion.button>
             ))}
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: emailOptions.length * 0.05 }}
               onClick={handleCopyEmail}
-              className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
+              className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
             >
               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
               <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy"}</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2, delay: (emailOptions.length + 1) * 0.05 }}
               onClick={() => setShowOptions(false)}
               className="p-2 rounded-lg active:bg-white/15 transition-colors text-muted-foreground touch-manipulation"
             >
               <X className="w-4 h-4" />
-            </button>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
