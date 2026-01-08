@@ -2,10 +2,15 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Folder, FileDown, Link2, ChevronRight, ExternalLink, FileText, FileCode } from "lucide-react"
+import { Folder, FileDown, Link2, ChevronRight, ExternalLink, FileText, FileCode, MapPin, Keyboard, Star, Layers, User } from "lucide-react"
 import { SiGithub } from "react-icons/si"
+import { StockholmMap } from "@/components/bento-tiles/stockholm-map"
+import { WpmStats } from "@/components/bento-tiles/wpm-stats"
+import { TechStack } from "@/components/bento-tiles/tech-stack"
+import { PokemonViewer } from "@/components/bento-tiles/pokemon-viewer"
+import { GithubContributions } from "@/components/bento-tiles/github-contributions"
 
-type SidebarItem = "projects" | "resume" | "links"
+type SidebarItem = "projects" | "about" | "resume" | "links"
 
 interface Project {
   name: string
@@ -46,6 +51,7 @@ const links = [
 
 const sidebarItems = [
   { id: "projects" as const, label: "Projects", icon: Folder },
+  { id: "about" as const, label: "About", icon: User },
   { id: "resume" as const, label: "Resume", icon: FileDown },
   { id: "links" as const, label: "Links", icon: Link2 },
 ]
@@ -55,21 +61,21 @@ export function Projects() {
   const [expandedProject, setExpandedProject] = useState<string | null>(null)
 
   return (
-    <section id="projects" className="relative min-h-screen flex items-start justify-center px-4 py-20 pt-32">
-      {/* White vignette glow */}
-      <div className="absolute top-20 left-0 right-0 flex justify-center pointer-events-none -z-10">
-        <div className="w-[800px] h-[600px] bg-white/8 rounded-full blur-[120px]" />
-      </div>
-
+    <section id="projects" className="relative flex items-start justify-center px-4 py-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="relative w-full max-w-5xl"
+        className="relative w-full max-w-6xl" style={{ zIndex: 10 }}
       >
         {/* Finder Window */}
-        <div className="rounded-xl border border-white/20 bg-black/90 backdrop-blur-xl overflow-hidden shadow-2xl shadow-black/50">
+        <div
+          className="rounded-xl border border-white/20 bg-black/90 backdrop-blur-xl overflow-hidden"
+          style={{
+            boxShadow: '0 0 100px rgba(255, 255, 255, 0.15), 0 20px 60px rgba(0, 0, 0, 0.8)'
+          }}
+        >
           {/* Title Bar */}
           <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/10">
             {/* Traffic Lights */}
@@ -87,9 +93,13 @@ export function Projects() {
             <div className="w-14" /> {/* Spacer for centering */}
           </div>
 
-          <div className="flex min-h-[520px] sm:min-h-[650px]">
+          <div className={`flex transition-all duration-300 ease-in-out ${
+            activeItem === "about"
+              ? "min-h-[520px] md:min-h-[1400px]"
+              : "min-h-[520px] sm:min-h-[650px]"
+          }`}>
             {/* Sidebar */}
-            <div className="w-28 sm:w-56 border-r border-white/10 bg-white/[0.02] p-2 sm:p-3">
+            <div className="w-16 sm:w-56 border-r border-white/10 bg-white/[0.02] p-2 sm:p-3">
               <div className="text-xs sm:text-sm text-foreground/40 font-medium px-2 sm:px-3 py-1 sm:py-1.5 mb-1">
                 Favorites
               </div>
@@ -97,14 +107,14 @@ export function Projects() {
                 <button
                   key={item.id}
                   onClick={() => setActiveItem(item.id)}
-                  className={`w-full flex items-center gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-sm sm:text-base transition-colors ${
+                  className={`w-full flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-2 sm:py-2 rounded-md text-sm sm:text-base transition-colors ${
                     activeItem === item.id
                       ? "bg-white/10 text-foreground"
                       : "text-foreground/60 hover:bg-white/5 hover:text-foreground"
                   }`}
                 >
-                  <item.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="truncate">{item.label}</span>
+                  <item.icon className="w-4 h-4 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:block truncate">{item.label}</span>
                 </button>
               ))}
             </div>
@@ -256,6 +266,79 @@ export function Projects() {
                         <ExternalLink className="w-4 h-4 text-foreground/30 ml-auto" />
                       </a>
                     ))}
+                  </motion.div>
+                )}
+
+                {activeItem === "about" && (
+                  <motion.div
+                    key="about"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="space-y-8"
+                  >
+                    {/* Intro Text */}
+                    <div>
+                      <h3 className="text-2xl font-semibold text-foreground mb-4">
+                        About Me
+                      </h3>
+                      <p className="text-base text-foreground/70 leading-relaxed">
+                        I'm a 31-year-old front-end developer in Stockholm with a deep creative background.
+                        20 years of music production, combined with 3D work in Blender and design chops
+                        from the Adobe suite, gives me a different perspective on web development. I believe
+                        the best interfaces feel effortless—where thoughtful motion, visual hierarchy, and
+                        attention to detail create experiences that just work.
+                      </p>
+                    </div>
+
+                    {/* Bento Grid Layout - Hidden on mobile */}
+                    <div className="hidden md:grid w-full auto-rows-[7.5rem] md:auto-rows-[9.5rem] grid-cols-4 md:grid-cols-8 gap-3 md:gap-4">
+                      {/* Location - Square */}
+                      <div className="relative col-span-4 row-span-2 flex flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
+                        <div className="hidden md:block absolute top-4 left-4 z-10">
+                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                            <MapPin className="h-3 w-3 text-foreground/60" />
+                          </div>
+                        </div>
+                        <StockholmMap />
+                      </div>
+
+                      {/* Pokemon - Square */}
+                      <div className="hidden md:flex relative col-span-4 row-span-2 flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
+                        <div className="hidden md:block absolute top-4 left-4 z-10">
+                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                            <Star className="h-3 w-3 text-foreground/60" />
+                          </div>
+                        </div>
+                        <PokemonViewer />
+                      </div>
+
+                      {/* WPM - Half height */}
+                      <div className="hidden md:flex relative col-span-4 row-span-1 flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
+                        <div className="hidden md:block absolute top-4 left-4 z-10">
+                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                            <Keyboard className="h-3 w-3 text-foreground/60" />
+                          </div>
+                        </div>
+                        <WpmStats />
+                      </div>
+
+                      {/* Tech Stack - Half height */}
+                      <div className="relative col-span-4 row-span-1 flex flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
+                        <div className="hidden md:block absolute top-4 left-4 z-10">
+                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                            <Layers className="h-3 w-3 text-foreground/60" />
+                          </div>
+                        </div>
+                        <TechStack />
+                      </div>
+
+                      {/* GitHub Contributions - Full Width */}
+                      <div className="relative col-span-4 md:col-span-8 row-span-2 flex flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
+                        <GithubContributions />
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
