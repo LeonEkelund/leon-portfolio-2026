@@ -12,7 +12,7 @@ const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[9.5rem] grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-3 md:gap-4",
+        "grid w-full auto-rows-[7.5rem] md:auto-rows-[9.5rem] grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-3 md:gap-4",
         className
       )}
     >
@@ -38,7 +38,7 @@ const BentoCard = ({
     )}
   >
     {label && (
-      <div className="absolute top-4 left-4 z-10">
+      <div className="hidden md:block absolute top-4 left-4 z-10">
         <Pill>{label}</Pill>
       </div>
     )}

@@ -69,7 +69,7 @@ export function Projects() {
         className="relative w-full max-w-5xl"
       >
         {/* Finder Window */}
-        <div className="rounded-xl border border-white/10 bg-black/80 backdrop-blur-xl overflow-hidden shadow-2xl">
+        <div className="rounded-xl border border-white/20 bg-black/90 backdrop-blur-xl overflow-hidden shadow-2xl shadow-black/50">
           {/* Title Bar */}
           <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/10">
             {/* Traffic Lights */}
@@ -80,24 +80,24 @@ export function Projects() {
             </div>
             {/* Path */}
             <div className="flex-1 text-center">
-              <span className="text-sm text-foreground/50 font-medium">
+              <span className="text-base text-foreground/50 font-medium">
                 ~/Leon/{activeItem.charAt(0).toUpperCase() + activeItem.slice(1)}
               </span>
             </div>
             <div className="w-14" /> {/* Spacer for centering */}
           </div>
 
-          <div className="flex min-h-[350px] sm:min-h-[500px]">
+          <div className="flex min-h-[520px] sm:min-h-[650px]">
             {/* Sidebar */}
-            <div className="w-32 sm:w-48 border-r border-white/10 bg-white/[0.02] p-2">
-              <div className="text-xs text-foreground/40 font-medium px-2 py-1 mb-1">
+            <div className="w-40 sm:w-56 border-r border-white/10 bg-white/[0.02] p-3">
+              <div className="text-sm text-foreground/40 font-medium px-3 py-1.5 mb-1">
                 Favorites
               </div>
               {sidebarItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveItem(item.id)}
-                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors ${
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-base transition-colors ${
                     activeItem === item.id
                       ? "bg-white/10 text-foreground"
                       : "text-foreground/60 hover:bg-white/5 hover:text-foreground"
@@ -110,7 +110,7 @@ export function Projects() {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 p-4">
+            <div className="flex-1 p-6 sm:p-8">
               <AnimatePresence mode="wait">
                 {activeItem === "projects" && (
                   <motion.div
@@ -127,14 +127,14 @@ export function Projects() {
                           onClick={() => setExpandedProject(
                             expandedProject === project.name ? null : project.name
                           )}
-                          className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-sm hover:bg-white/5 transition-colors group touch-manipulation"
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md text-base hover:bg-white/5 transition-colors group touch-manipulation"
                         >
                           <ChevronRight
-                            className={`w-4 h-4 text-foreground/40 transition-transform ${
+                            className={`w-5 h-5 text-foreground/40 transition-transform ${
                               expandedProject === project.name ? "rotate-90" : ""
                             }`}
                           />
-                          <Folder className="w-4 h-4 text-blue-400" />
+                          <Folder className="w-5 h-5 text-blue-400" />
                           <span className="text-foreground/80 group-hover:text-foreground whitespace-nowrap">
                             {project.name}
                           </span>
@@ -147,15 +147,15 @@ export function Projects() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
                             transition={{ duration: 0.15, ease: "easeOut" }}
-                            className="ml-8 py-1 space-y-0.5"
+                            className="ml-10 py-2 space-y-1"
                           >
                                 {/* README file */}
-                                <div className="px-2 py-1.5 rounded-md text-sm">
-                                  <div className="flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-foreground/40" />
-                                    <span className="text-foreground/60">README.md</span>
+                                <div className="px-3 py-2 rounded-md text-base">
+                                  <div className="flex items-center gap-2.5">
+                                    <FileText className="w-5 h-5 text-foreground/40" />
+                                    <span className="text-foreground/70">README.md</span>
                                   </div>
-                                  <p className="text-foreground/30 text-xs mt-1 ml-6">
+                                  <p className="text-foreground/60 text-base mt-1.5 ml-7 leading-relaxed">
                                     {project.description}
                                   </p>
                                 </div>
@@ -165,9 +165,9 @@ export function Projects() {
                                   <a
                                     href={project.website}
                                     target="_blank"
-                                    className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm hover:bg-white/5 transition-colors"
+                                    className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
                                   >
-                                    <ExternalLink className="w-4 h-4 text-blue-400/60" />
+                                    <ExternalLink className="w-5 h-5 text-blue-400/60" />
                                     <span className="text-foreground/60 hover:text-foreground">live-site.url</span>
                                   </a>
                                 )}
@@ -177,24 +177,24 @@ export function Projects() {
                                   <a
                                     href={project.github}
                                     target="_blank"
-                                    className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm hover:bg-white/5 transition-colors"
+                                    className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
                                   >
-                                    <SiGithub className="w-4 h-4 text-foreground/40" />
+                                    <SiGithub className="w-5 h-5 text-foreground/40" />
                                     <span className="text-foreground/60 hover:text-foreground">source.git</span>
                                   </a>
                                 )}
 
                                 {/* Tech stack folder */}
-                                <div className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm">
-                                  <Folder className="w-4 h-4 text-blue-400/60" />
+                                <div className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base">
+                                  <Folder className="w-5 h-5 text-blue-400/60" />
                                   <span className="text-foreground/60">stack/</span>
                                 </div>
                                 {project.tech.map((t) => (
                                   <div
                                     key={t}
-                                    className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm ml-4"
+                                    className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base ml-6"
                                   >
-                                    <FileCode className="w-4 h-4 text-green-400/60" />
+                                    <FileCode className="w-5 h-5 text-green-400/60" />
                                     <span className="text-foreground/60">{t.toLowerCase().replace(/\s+/g, "-")}.config</span>
                                   </div>
                                 ))}
@@ -218,14 +218,14 @@ export function Projects() {
                     <a
                       href="/resume.pdf"
                       download
-                      className="flex items-center gap-3 px-3 py-3 rounded-md hover:bg-white/5 transition-colors group"
+                      className="flex items-center gap-4 px-4 py-4 rounded-md hover:bg-white/5 transition-colors group"
                     >
-                      <FileDown className="w-6 h-6 sm:w-8 sm:h-8 text-red-400" />
+                      <FileDown className="w-8 h-8 sm:w-10 sm:h-10 text-red-400" />
                       <div>
-                        <div className="text-sm text-foreground/80 group-hover:text-foreground">
+                        <div className="text-base text-foreground/80 group-hover:text-foreground">
                           Leon_Ekelund_Resume.pdf
                         </div>
-                        <div className="text-xs text-foreground/40">
+                        <div className="text-sm text-foreground/40">
                           Click to download
                         </div>
                       </div>
@@ -247,13 +247,13 @@ export function Projects() {
                         key={link.name}
                         href={link.url}
                         target="_blank"
-                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/5 transition-colors group"
+                        className="flex items-center gap-4 px-4 py-3 rounded-md hover:bg-white/5 transition-colors group"
                       >
-                        <link.icon className="w-5 h-5 text-foreground/40 group-hover:text-foreground/60" />
-                        <span className="text-sm text-foreground/80 group-hover:text-foreground">
+                        <link.icon className="w-6 h-6 text-foreground/40 group-hover:text-foreground/60" />
+                        <span className="text-base text-foreground/80 group-hover:text-foreground">
                           {link.name}
                         </span>
-                        <ExternalLink className="w-3 h-3 text-foreground/30 ml-auto" />
+                        <ExternalLink className="w-4 h-4 text-foreground/30 ml-auto" />
                       </a>
                     ))}
                   </motion.div>

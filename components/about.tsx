@@ -52,7 +52,7 @@ export function AboutMe() {
         </BentoCard>
 
         {/* 2. Sandshrew */}
-        <BentoCard label={<Star className="h-4 w-4" />} className="col-span-4 md:col-span-4 lg:col-span-4 row-span-2">
+        <BentoCard label={<Star className="h-4 w-4" />} className="hidden md:flex col-span-4 md:col-span-4 lg:col-span-4 row-span-2">
           <PokemonViewer />
         </BentoCard>
 
@@ -62,7 +62,7 @@ export function AboutMe() {
         </BentoCard>
 
         {/* 5. WPM */}
-        <BentoCard label={<Keyboard className="h-4 w-4" />} className="col-span-4 md:col-span-4 lg:col-span-4 row-span-1">
+        <BentoCard label={<Keyboard className="h-4 w-4" />} className="hidden md:flex col-span-4 md:col-span-4 lg:col-span-4 row-span-1">
           <WpmStats />
         </BentoCard>
 

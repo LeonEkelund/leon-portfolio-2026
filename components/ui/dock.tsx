@@ -116,8 +116,13 @@ const DockIcon = ({
 }: DockIconProps) => {
   const ref = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const padding = Math.max(6, size * 0.2)
   const defaultMouseX = useMotionValue(Infinity)
+
+  React.useEffect(() => {
+    setIsMobile(window.matchMedia("(pointer: coarse)").matches)
+  }, [])
 
   const distanceCalc = useTransform(mouseX ?? defaultMouseX, (val: number) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 }
@@ -152,7 +157,7 @@ const DockIcon = ({
       {...props}
     >
       <AnimatePresence>
-        {tooltip && isHovered && (
+        {tooltip && isHovered && !isMobile && (
           <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}

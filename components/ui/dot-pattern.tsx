@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 interface DotPatternProps extends React.SVGProps<SVGSVGElement> {
@@ -19,7 +20,7 @@ export function DotPattern({
   className,
   ...props
 }: DotPatternProps) {
-  const id = `dot-pattern-${Math.random().toString(36).slice(2, 9)}`;
+  const id = `dot-pattern-${useId()}`;
 
   return (
     <svg

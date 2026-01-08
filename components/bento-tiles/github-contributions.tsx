@@ -63,9 +63,9 @@ export function GithubContributions() {
   };
 
   return (
-    <div className="relative flex sm:flex-row items-center justify-center sm:justify-between h-full px-4 sm:px-8">
-      {/* Stats - absolute on mobile, normal on desktop */}
-      <div className="absolute top-3 left-0 right-0 text-center sm:relative sm:top-auto sm:left-auto sm:right-auto sm:text-left flex flex-col gap-0.5 sm:gap-1 shrink-0">
+    <div className="relative flex flex-col sm:flex-row items-center justify-center sm:justify-between h-full px-4 py-4 sm:px-8 sm:py-0 gap-3 sm:gap-0">
+      {/* Stats */}
+      <div className="flex flex-col gap-0.5 sm:gap-1 shrink-0 text-center sm:text-left">
         <p className="text-xl sm:text-3xl font-semibold text-foreground">
           {hoveredDay ? hoveredDay.count : totalContributions}
         </p>
@@ -78,7 +78,7 @@ export function GithubContributions() {
         </p>
       </div>
 
-      {/* Grid - centered */}
+      {/* Grid */}
       <div
         className="flex gap-[5px] sm:gap-[6px]"
         onMouseLeave={() => {
