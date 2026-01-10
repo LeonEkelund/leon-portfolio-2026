@@ -6,10 +6,12 @@ import { Mail } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
+import { useLightbox } from "@/components/lightbox-context"
 
 export function NavigationDock() {
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
+  const { isLightboxOpen } = useLightbox()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +50,7 @@ export function NavigationDock() {
     >
       <Dock
         className={`transition-transform duration-300 ease-in-out ${
-          hidden ? "translate-y-[calc(100%+40px)]" : "translate-y-0"
+          hidden || isLightboxOpen ? "translate-y-[calc(100%+40px)]" : "translate-y-0"
         }`}
         iconMagnification={60}
         iconDistance={80}

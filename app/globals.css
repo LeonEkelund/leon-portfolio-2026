@@ -1,37 +1,26 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-:root {
-  --background: oklch(0.1448 0 0);
-  --foreground: oklch(0.9851 0 0);
-  --primary: oklch(0.5555 0 0);
-  --primary-foreground: oklch(0.9851 0 0);
-  --muted: oklch(0.2686 0 0);
-  --muted-foreground: oklch(0.7090 0 0);
-  --border: oklch(0.3407 0 0);
-  --ring: oklch(0.5555 0 0);
-  --radius: 0.5rem;
+@theme inline {
+  --color-background: #faf9f2;
+  --color-foreground: var(--color-stone-900);
+  --color-primary: var(--color-emerald-600);
+  --color-primary-foreground: var(--color-white);
+  --color-muted: var(--color-stone-100);
+  --color-muted-foreground: var(--color-stone-500);
+  --color-border: var(--color-stone-200);
+  --color-accent: var(--color-emerald-600);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
 }
 
 html,
 body {
-  font-family: var(--font-sans);
-  background-color: var(--background);
-  color: var(--foreground);
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -50,3 +39,4 @@ body {
   animation: marquee linear infinite;
   will-change: transform;
 }
+

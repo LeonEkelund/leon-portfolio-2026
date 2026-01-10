@@ -2,15 +2,26 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Folder, FileDown, Link2, ChevronRight, ExternalLink, FileText, FileCode, MapPin, Keyboard, Star, Layers, User } from "lucide-react"
+import { Folder, ChevronRight, ExternalLink, FileText, FileCode, Palette, Music, Image as ImageIcon } from "lucide-react"
 import { SiGithub } from "react-icons/si"
-import { StockholmMap } from "@/components/bento-tiles/stockholm-map"
-import { WpmStats } from "@/components/bento-tiles/wpm-stats"
-import { TechStack } from "@/components/bento-tiles/tech-stack"
-import { PokemonViewer } from "@/components/bento-tiles/pokemon-viewer"
-import { GithubContributions } from "@/components/bento-tiles/github-contributions"
+import { SectionHeading } from "@/components/ui/section-heading"
+import { Lightbox } from "@/components/ui/lightbox"
+import { useLightbox } from "@/components/lightbox-context"
 
-type SidebarItem = "projects" | "about" | "resume" | "links"
+const images3d = [
+  { name: "render-1.png", src: "/images/3d/1.png" },
+  { name: "render-2.png", src: "/images/3d/2.png" },
+  { name: "render-3.png", src: "/images/3d/3.png" },
+  { name: "render-4.png", src: "/images/3d/4.png" },
+  { name: "render-5.png", src: "/images/3d/5.png" },
+]
+
+const musicTracks = [
+  { name: "track-1.mp4", url: "https://youtu.be/asx-vNmSpE0" },
+  { name: "track-2.mp4", url: "https://youtu.be/IDlwfUo4GYE" },
+]
+
+type SidebarItem = "projects" | "creative"
 
 interface Project {
   name: string
@@ -44,24 +55,33 @@ const projects: Project[] = [
   },
 ]
 
-const links = [
-  { name: "GitHub", url: "https://github.com/LeonEkelund", icon: SiGithub },
-  { name: "LinkedIn", url: "https://www.linkedin.com/in/leon-ekelund-50050720a/", icon: Link2 },
-]
-
 const sidebarItems = [
   { id: "projects" as const, label: "Projects", icon: Folder },
-  { id: "about" as const, label: "About", icon: User },
-  { id: "resume" as const, label: "Resume", icon: FileDown },
-  { id: "links" as const, label: "Links", icon: Link2 },
+  { id: "creative" as const, label: "Creative", icon: Palette },
 ]
 
 export function Projects() {
   const [activeItem, setActiveItem] = useState<SidebarItem>("projects")
   const [expandedProject, setExpandedProject] = useState<string | null>(null)
+  const [expandedCreative, setExpandedCreative] = useState<string | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
+  const { setIsLightboxOpen } = useLightbox()
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index)
+    setLightboxOpen(true)
+    setIsLightboxOpen(true)
+  }
+
+  const closeLightbox = () => {
+    setLightboxOpen(false)
+    setIsLightboxOpen(false)
+  }
 
   return (
-    <section id="projects" className="relative flex items-start justify-center px-4 py-20">
+    <section id="projects" className="relative flex flex-col items-center justify-center px-4 py-20">
+      <SectionHeading title="Work" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -71,13 +91,14 @@ export function Projects() {
       >
         {/* Finder Window */}
         <div
-          className="rounded-xl border border-white/20 bg-black/90 backdrop-blur-xl overflow-hidden"
+          className="rounded-xl border border-stone-200 bg-white backdrop-blur-xl overflow-hidden shadow-lg"
           style={{
-            boxShadow: '0 0 100px rgba(255, 255, 255, 0.15), 0 20px 60px rgba(0, 0, 0, 0.8)'
+            boxShadow: '0 0 60px rgba(16, 185, 129, 0.12), 0 20px 40px rgba(0, 0, 0, 0.08)',
+            transition: 'all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)'
           }}
         >
           {/* Title Bar */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/10">
+          <div className="flex items-center gap-2 px-4 py-3 bg-stone-50 border-b border-stone-200">
             {/* Traffic Lights */}
             <div className="flex gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
@@ -93,14 +114,10 @@ export function Projects() {
             <div className="w-14" /> {/* Spacer for centering */}
           </div>
 
-          <div className={`flex transition-all duration-300 ease-in-out ${
-            activeItem === "about"
-              ? "min-h-[520px] md:min-h-[1400px]"
-              : "min-h-[520px] sm:min-h-[650px]"
-          }`}>
+          <div className="flex min-h-[520px] sm:min-h-[650px] transition-all duration-300 ease-in-out">
             {/* Sidebar */}
-            <div className="w-16 sm:w-56 border-r border-white/10 bg-white/[0.02] p-2 sm:p-3">
-              <div className="text-xs sm:text-sm text-foreground/40 font-medium px-2 sm:px-3 py-1 sm:py-1.5 mb-1">
+            <div className="w-16 sm:w-56 border-r border-stone-200 bg-stone-50 p-2 sm:p-3">
+              <div className="text-[10px] sm:text-sm text-stone-500 font-medium px-2 sm:px-3 py-1 sm:py-1.5 mb-1">
                 Favorites
               </div>
               {sidebarItems.map((item) => (
@@ -109,8 +126,8 @@ export function Projects() {
                   onClick={() => setActiveItem(item.id)}
                   className={`w-full flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-2 sm:py-2 rounded-md text-sm sm:text-base transition-colors ${
                     activeItem === item.id
-                      ? "bg-white/10 text-foreground"
-                      : "text-foreground/60 hover:bg-white/5 hover:text-foreground"
+                      ? "bg-stone-100 text-stone-900"
+                      : "text-stone-600 hover:bg-stone-100/50 hover:text-stone-900"
                   }`}
                 >
                   <item.icon className="w-4 h-4 sm:w-4 sm:h-4" />
@@ -120,7 +137,7 @@ export function Projects() {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 p-6 sm:p-8">
+            <div className="flex-1 p-5 sm:p-6">
               <AnimatePresence mode="wait">
                 {activeItem === "projects" && (
                   <motion.div
@@ -132,35 +149,38 @@ export function Projects() {
                     className="space-y-1"
                   >
                     {projects.map((project) => (
-                      <div key={project.name}>
-                        <button
+                      <motion.div key={project.name} layout transition={{ duration: 0.25, ease: [0.4, 0.0, 0.2, 1] }}>
+                        <motion.button
+                          layout
                           onClick={() => setExpandedProject(
                             expandedProject === project.name ? null : project.name
                           )}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md text-base hover:bg-white/5 transition-colors group touch-manipulation"
+                          className="w-full flex items-center gap-2.5 py-2.5 rounded-md text-base hover:bg-white/5 group touch-manipulation"
                         >
                           <ChevronRight
-                            className={`w-5 h-5 text-foreground/40 transition-transform ${
+                            className={`w-5 h-5 text-foreground/40 ${
                               expandedProject === project.name ? "rotate-90" : ""
                             }`}
+                            style={{ transition: 'transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1)' }}
                           />
                           <Folder className="w-5 h-5 text-blue-400" />
                           <span className="text-foreground/80 group-hover:text-foreground whitespace-nowrap">
                             {project.name}
                           </span>
-                        </button>
+                        </motion.button>
 
-                        <AnimatePresence>
+                        <AnimatePresence initial={false}>
                           {expandedProject === project.name && (
                           <motion.div
-                            initial={{ opacity: 0, y: -8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.15, ease: "easeOut" }}
-                            className="ml-10 py-2 space-y-1"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25, ease: [0.4, 0.0, 0.2, 1] }}
+                            className="overflow-hidden"
                           >
+                            <div className="ml-10 py-2 space-y-1">
                                 {/* README file */}
-                                <div className="px-3 py-2 rounded-md text-base">
+                                <div className="py-2 rounded-md text-base">
                                   <div className="flex items-center gap-2.5">
                                     <FileText className="w-5 h-5 text-foreground/40" />
                                     <span className="text-foreground/70">README.md</span>
@@ -175,7 +195,7 @@ export function Projects() {
                                   <a
                                     href={project.website}
                                     target="_blank"
-                                    className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
+                                    className="flex items-center gap-2.5 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
                                   >
                                     <ExternalLink className="w-5 h-5 text-blue-400/60" />
                                     <span className="text-foreground/60 hover:text-foreground">live-site.url</span>
@@ -187,7 +207,7 @@ export function Projects() {
                                   <a
                                     href={project.github}
                                     target="_blank"
-                                    className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
+                                    className="flex items-center gap-2.5 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
                                   >
                                     <SiGithub className="w-5 h-5 text-foreground/40" />
                                     <span className="text-foreground/60 hover:text-foreground">source.git</span>
@@ -195,157 +215,146 @@ export function Projects() {
                                 )}
 
                                 {/* Tech stack folder */}
-                                <div className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base">
+                                <div className="flex items-center gap-2.5 py-2 rounded-md text-base">
                                   <Folder className="w-5 h-5 text-blue-400/60" />
                                   <span className="text-foreground/60">stack/</span>
                                 </div>
                                 {project.tech.map((t) => (
                                   <div
                                     key={t}
-                                    className="flex items-center gap-2.5 px-3 py-2 rounded-md text-base ml-6"
+                                    className="flex items-center gap-2.5 py-2 rounded-md text-base ml-6"
                                   >
                                     <FileCode className="w-5 h-5 text-green-400/60" />
                                     <span className="text-foreground/60">{t.toLowerCase().replace(/\s+/g, "-")}.config</span>
                                   </div>
                                 ))}
+                            </div>
                           </motion.div>
                         )}
                         </AnimatePresence>
-                      </div>
+                      </motion.div>
                     ))}
                   </motion.div>
                 )}
 
-                {activeItem === "resume" && (
+                {activeItem === "creative" && (
                   <motion.div
-                    key="resume"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="space-y-2"
-                  >
-                    <a
-                      href="/resume.pdf"
-                      download
-                      className="flex items-center gap-4 px-4 py-4 rounded-md hover:bg-white/5 transition-colors group"
-                    >
-                      <FileDown className="w-8 h-8 sm:w-10 sm:h-10 text-red-400" />
-                      <div>
-                        <div className="text-base text-foreground/80 group-hover:text-foreground">
-                          Leon_Ekelund_Resume.pdf
-                        </div>
-                        <div className="text-sm text-foreground/40">
-                          Click to download
-                        </div>
-                      </div>
-                    </a>
-                  </motion.div>
-                )}
-
-                {activeItem === "links" && (
-                  <motion.div
-                    key="links"
+                    key="creative"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }}
                     className="space-y-1"
                   >
-                    {links.map((link) => (
-                      <a
-                        key={link.name}
-                        href={link.url}
-                        target="_blank"
-                        className="flex items-center gap-4 px-4 py-3 rounded-md hover:bg-white/5 transition-colors group"
+                    {/* 3D Folder */}
+                    <motion.div layout transition={{ duration: 0.25, ease: [0.4, 0.0, 0.2, 1] }}>
+                      <motion.button
+                        layout
+                        onClick={() => setExpandedCreative(
+                          expandedCreative === "3d" ? null : "3d"
+                        )}
+                        className="w-full flex items-center gap-2.5 py-2.5 rounded-md text-base hover:bg-white/5 group touch-manipulation"
                       >
-                        <link.icon className="w-6 h-6 text-foreground/40 group-hover:text-foreground/60" />
-                        <span className="text-base text-foreground/80 group-hover:text-foreground">
-                          {link.name}
+                        <ChevronRight
+                          className={`w-5 h-5 text-foreground/40 ${
+                            expandedCreative === "3d" ? "rotate-90" : ""
+                          }`}
+                          style={{ transition: 'transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1)' }}
+                        />
+                        <Folder className="w-5 h-5 text-blue-400" />
+                        <span className="text-foreground/80 group-hover:text-foreground whitespace-nowrap">
+                          3D
                         </span>
-                        <ExternalLink className="w-4 h-4 text-foreground/30 ml-auto" />
-                      </a>
-                    ))}
+                      </motion.button>
+
+                      <AnimatePresence initial={false}>
+                        {expandedCreative === "3d" && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25, ease: [0.4, 0.0, 0.2, 1] }}
+                            className="overflow-hidden"
+                          >
+                            <div className="ml-10 py-2 space-y-1">
+                              {images3d.map((image, index) => (
+                                <button
+                                  key={image.name}
+                                  onClick={() => openLightbox(index)}
+                                  className="flex items-center gap-2.5 py-2 rounded-md text-base hover:bg-white/5 transition-colors outline-none"
+                                >
+                                  <ImageIcon className="w-5 h-5 text-pink-400/70" />
+                                  <span className="text-foreground/60 hover:text-foreground">{image.name}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+
+                    {/* Music Folder */}
+                    <motion.div layout transition={{ duration: 0.25, ease: [0.4, 0.0, 0.2, 1] }}>
+                      <motion.button
+                        layout
+                        onClick={() => setExpandedCreative(
+                          expandedCreative === "music" ? null : "music"
+                        )}
+                        className="w-full flex items-center gap-2.5 py-2.5 rounded-md text-base hover:bg-white/5 group touch-manipulation"
+                      >
+                        <ChevronRight
+                          className={`w-5 h-5 text-foreground/40 ${
+                            expandedCreative === "music" ? "rotate-90" : ""
+                          }`}
+                          style={{ transition: 'transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1)' }}
+                        />
+                        <Folder className="w-5 h-5 text-blue-400" />
+                        <span className="text-foreground/80 group-hover:text-foreground whitespace-nowrap">
+                          Music
+                        </span>
+                      </motion.button>
+
+                      <AnimatePresence initial={false}>
+                        {expandedCreative === "music" && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25, ease: [0.4, 0.0, 0.2, 1] }}
+                            className="overflow-hidden"
+                          >
+                            <div className="ml-10 py-2 space-y-1">
+                              {musicTracks.map((track) => (
+                                <a
+                                  key={track.name}
+                                  href={track.url}
+                                  target="_blank"
+                                  className="flex items-center gap-2.5 py-2 rounded-md text-base hover:bg-white/5 transition-colors"
+                                >
+                                  <Music className="w-5 h-5 text-purple-400/70" />
+                                  <span className="text-foreground/60 hover:text-foreground">{track.name}</span>
+                                </a>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
                   </motion.div>
                 )}
 
-                {activeItem === "about" && (
-                  <motion.div
-                    key="about"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="space-y-8"
-                  >
-                    {/* Intro Text */}
-                    <div>
-                      <h3 className="text-2xl font-semibold text-foreground mb-4">
-                        About Me
-                      </h3>
-                      <p className="text-base text-foreground/70 leading-relaxed">
-                        I'm a 31-year-old front-end developer in Stockholm with a deep creative background.
-                        20 years of music production, combined with 3D work in Blender and design chops
-                        from the Adobe suite, gives me a different perspective on web development. I believe
-                        the best interfaces feel effortless—where thoughtful motion, visual hierarchy, and
-                        attention to detail create experiences that just work.
-                      </p>
-                    </div>
-
-                    {/* Bento Grid Layout - Hidden on mobile */}
-                    <div className="hidden md:grid w-full auto-rows-[7.5rem] md:auto-rows-[9.5rem] grid-cols-4 md:grid-cols-8 gap-3 md:gap-4">
-                      {/* Location - Square */}
-                      <div className="relative col-span-4 row-span-2 flex flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
-                        <div className="hidden md:block absolute top-4 left-4 z-10">
-                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                            <MapPin className="h-3 w-3 text-foreground/60" />
-                          </div>
-                        </div>
-                        <StockholmMap />
-                      </div>
-
-                      {/* Pokemon - Square */}
-                      <div className="hidden md:flex relative col-span-4 row-span-2 flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
-                        <div className="hidden md:block absolute top-4 left-4 z-10">
-                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                            <Star className="h-3 w-3 text-foreground/60" />
-                          </div>
-                        </div>
-                        <PokemonViewer />
-                      </div>
-
-                      {/* WPM - Half height */}
-                      <div className="hidden md:flex relative col-span-4 row-span-1 flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
-                        <div className="hidden md:block absolute top-4 left-4 z-10">
-                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                            <Keyboard className="h-3 w-3 text-foreground/60" />
-                          </div>
-                        </div>
-                        <WpmStats />
-                      </div>
-
-                      {/* Tech Stack - Half height */}
-                      <div className="relative col-span-4 row-span-1 flex flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
-                        <div className="hidden md:block absolute top-4 left-4 z-10">
-                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                            <Layers className="h-3 w-3 text-foreground/60" />
-                          </div>
-                        </div>
-                        <TechStack />
-                      </div>
-
-                      {/* GitHub Contributions - Full Width */}
-                      <div className="relative col-span-4 md:col-span-8 row-span-2 flex flex-col overflow-hidden rounded-2xl bg-white/[0.01] border border-white/10">
-                        <GithubContributions />
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
               </AnimatePresence>
             </div>
           </div>
         </div>
       </motion.div>
+
+      <Lightbox
+        images={images3d.map((img) => img.src)}
+        initialIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={closeLightbox}
+      />
     </section>
   )
 }

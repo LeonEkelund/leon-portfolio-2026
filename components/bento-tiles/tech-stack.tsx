@@ -76,7 +76,7 @@ export function TechStack() {
         {technologies.map((tech) => (
           <div
             key={tech.name}
-            className="flex items-center justify-center px-5"
+            className="flex items-center justify-center px-5 text-foreground/70"
           >
             {tech.icon}
           </div>

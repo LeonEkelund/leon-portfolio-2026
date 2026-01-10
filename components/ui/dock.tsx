@@ -30,7 +30,7 @@ const DEFAULT_DISTANCE = 140
 const DEFAULT_DISABLEMAGNIFICATION = false
 
 const dockVariants = cva(
-  "mx-auto flex h-[68px] w-max items-center justify-center gap-2 rounded-2xl border border-white/5 bg-black/10 p-3 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+  "mx-auto flex h-[68px] w-max items-center justify-center gap-2 rounded-2xl border border-white/10 bg-transparent p-3 backdrop-blur-xl shadow-lg"
 )
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(
@@ -163,13 +163,13 @@ const DockIcon = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
             transition={{ duration: 0.15 }}
-            className="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-foreground text-background text-xs font-medium whitespace-nowrap"
+            className="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-foreground/70 text-background text-xs font-medium whitespace-nowrap"
           >
             {tooltip}
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="size-full">{children}</div>
+      <div className="size-full text-foreground/70">{children}</div>
       <AnimatePresence>
         {isHovered && (
           <motion.div

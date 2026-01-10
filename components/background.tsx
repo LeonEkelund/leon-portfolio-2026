@@ -7,7 +7,7 @@ export function Background() {
       style={{
         top: "-50px",
         height: "calc(40vh + 50px)",
-        background: "radial-gradient(ellipse 120% 60% at 50% 50px, rgba(255,255,255,0.08) 0%, transparent 100%)",
+        background: "radial-gradient(ellipse 120% 60% at 50% 50px, rgba(16, 185, 129, 0.06) 0%, transparent 100%)",
       }}
     />
   );

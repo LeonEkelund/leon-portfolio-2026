@@ -6,20 +6,22 @@ import { ArrowRight, Mail, X, Copy, Check } from "lucide-react";
 
 const EMAIL = "leongudmundssonekelund@gmail.com";
 
-const emailOptions = [
+const PHONE = "+46709752924";
+
+const contactOptions = [
   {
-    label: "Gmail",
-    icon: () => (
-      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
-      </svg>
-    ),
-    action: () => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}`, "_blank"),
-  },
-  {
-    label: "Default",
+    label: "Mail",
     icon: Mail,
     action: () => window.location.href = `mailto:${EMAIL}`,
+  },
+  {
+    label: "Call",
+    icon: () => (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+      </svg>
+    ),
+    action: () => window.location.href = `tel:${PHONE}`,
   },
 ];
 
@@ -55,8 +57,7 @@ function MobileCtaCard() {
             onClick={() => setShowOptions(true)}
             className="flex items-center gap-2 px-4 py-2 touch-manipulation"
           >
-            <Mail className="w-5 h-5 text-foreground/60" />
-            <span className="text-lg font-medium text-foreground/60">Get in touch</span>
+            <span className="text-lg font-medium text-foreground/60">Tap to connect</span>
           </motion.button>
         ) : (
           <motion.div
@@ -67,7 +68,7 @@ function MobileCtaCard() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="flex items-center gap-2 sm:gap-3 px-2"
           >
-            {emailOptions.map((option, index) => (
+            {contactOptions.map((option, index) => (
               <motion.button
                 key={option.label}
                 initial={{ opacity: 0, y: 10 }}
@@ -83,17 +84,17 @@ function MobileCtaCard() {
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: emailOptions.length * 0.05 }}
+              transition={{ duration: 0.2, delay: contactOptions.length * 0.05 }}
               onClick={handleCopyEmail}
               className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
             >
               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
-              <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy"}</span>
+              <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy Email"}</span>
             </motion.button>
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2, delay: (emailOptions.length + 1) * 0.05 }}
+              transition={{ duration: 0.2, delay: (contactOptions.length + 1) * 0.05 }}
               onClick={() => setShowOptions(false)}
               className="p-2 rounded-lg active:bg-white/15 transition-colors text-muted-foreground touch-manipulation"
             >
@@ -200,9 +201,9 @@ function DesktopCtaCard() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="absolute inset-0 flex items-center justify-center gap-3 bg-background z-20"
+            className="absolute inset-0 flex items-center justify-center gap-3 backdrop-blur-sm z-20"
           >
-            {emailOptions.map((option) => (
+            {contactOptions.map((option) => (
               <button
                 key={option.label}
                 onClick={() => handleOptionClick(option.action)}
@@ -217,7 +218,7 @@ function DesktopCtaCard() {
               className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
             >
               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
-              <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy"}</span>
+              <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy Email"}</span>
             </button>
             <button
               onClick={closeOptions}
@@ -231,14 +232,14 @@ function DesktopCtaCard() {
 
       <style jsx>{`
         .shimmer-text {
-          color: rgba(255, 255, 255, 0.4);
+          color: rgba(0, 0, 0, 0.3);
           background: linear-gradient(
             90deg,
-            rgba(255, 255, 255, 0.4) 0%,
-            rgba(255, 255, 255, 0.4) 40%,
-            rgba(255, 255, 255, 1) 50%,
-            rgba(255, 255, 255, 0.4) 60%,
-            rgba(255, 255, 255, 0.4) 100%
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.3) 40%,
+            rgba(0, 0, 0, 0.7) 50%,
+            rgba(0, 0, 0, 0.3) 60%,
+            rgba(0, 0, 0, 0.3) 100%
           );
           background-size: 300% 100%;
           -webkit-background-clip: text;

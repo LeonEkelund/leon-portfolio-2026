@@ -17,7 +17,7 @@ export function StockholmMap() {
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v11",
+      style: "mapbox://styles/mapbox/streets-v12",
       center: STOCKHOLM_COORDS,
       zoom: 11,
       attributionControl: false,
@@ -86,7 +86,7 @@ export function StockholmMap() {
           border-top: 1px solid var(--border) !important;
         }
         .mapboxgl-ctrl-group button span {
-          filter: invert(1) !important;
+          filter: none !important;
         }
       `}</style>
       <div ref={mapContainer} className="absolute inset-0 w-full h-full" />

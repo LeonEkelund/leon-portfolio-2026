@@ -5,6 +5,7 @@ import { Albert_Sans } from "next/font/google"
 import { Background } from "@/components/background"
 import { LenisProvider } from "@/components/lenis-provider"
 import { LoadingProvider } from "@/components/loading-context"
+import { LightboxProvider } from "@/components/lightbox-context"
 import Script from "next/script"
 
 const albertSans = Albert_Sans({
@@ -34,11 +35,13 @@ export default function RootLayout({
       />
       <body className={`${albertSans.variable}`}>
         <LoadingProvider>
-          <LenisProvider>
-            <Background />
-            {children}
-            <NavigationDock />
-          </LenisProvider>
+          <LightboxProvider>
+            <LenisProvider>
+              <Background />
+              {children}
+              <NavigationDock />
+            </LenisProvider>
+          </LightboxProvider>
         </LoadingProvider>
       </body>
     </html>
