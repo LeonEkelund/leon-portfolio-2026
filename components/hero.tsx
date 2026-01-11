@@ -30,7 +30,7 @@ export function Hero() {
 
   return (
     <section id="home" className="relative flex min-h-screen flex-col items-center
-     justify-center px-4 gap-2">
+     justify-center px-4 gap-4">
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -68,9 +68,9 @@ export function Hero() {
           ease: "easeInOut",
           delay: 0.16,
         }}
-        className="text-5xl tracking-tight text-foreground/70 text-center font-light"
+        className="text-5xl tracking-normal text-foreground/60 text-center font-light"
       >
-        A <span className="opacity-70">creative</span> front-end developer.
+        A <span className="italic text-foreground/80">creative</span> front-end developer.
       </motion.p>
 
       <div className="mt-16 h-6">
