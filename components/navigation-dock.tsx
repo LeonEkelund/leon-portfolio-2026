@@ -2,7 +2,7 @@
 
 import { Dock, DockIcon } from "@/components/ui/dock"
 import Link from "next/link"
-import { Mail } from "lucide-react"
+import { Mail, FileDown } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
@@ -69,6 +69,11 @@ export function NavigationDock() {
           <Link href="mailto:leongudmundssonekelund@gmail.com" className="size-full">
             <Mail className="size-full" />
           </Link>
+        </DockIcon>
+        <DockIcon tooltip="Resume">
+          <a href="/leon-ekelund-resume.pdf" download className="size-full">
+            <FileDown className="size-full" />
+          </a>
         </DockIcon>
       </Dock>
     </motion.div>

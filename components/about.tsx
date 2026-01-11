@@ -1,11 +1,27 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { StockholmMap } from "@/components/bento-tiles/stockholm-map"
-import { TechStack } from "@/components/bento-tiles/tech-stack"
+import { Pill } from "@/components/ui/pill"
+
+const primarySkills = [
+  "React", "Next.js", "TypeScript", "JavaScript", "HTML", "CSS", "MongoDB",
+  "UI/UX", "Figma", "Responsive Design", "Accessibility", "Design Prototyping",
+  "Photoshop", "Illustrator", "After Effects", "Premiere Pro", "Blender"
+]
+
+const moreSkills = [
+  "InDesign", "Lightroom", "DaVinci Resolve",
+  "Sound Design", "Music Production", "Audio Mixing", "Cubase", "FL Studio", "Pro Tools", "Ableton",
+  "3D Modeling", "3D Rendering", "Video Editing",
+  "Notion", "Jira"
+]
 
 export function About() {
+  const [showMore, setShowMore] = useState(false)
+
   return (
     <section id="about" className="relative flex flex-col items-center justify-center px-4 py-20">
       <SectionHeading title="About" />
@@ -47,13 +63,41 @@ export function About() {
           <div className="relative h-48 md:h-64 rounded-2xl border border-stone-200 overflow-hidden shadow-lg">
             <StockholmMap />
           </div>
-
-          {/* Tech Stack Tile */}
-          <div className="relative h-20 rounded-2xl border border-stone-200 bg-transparent overflow-hidden shadow-lg">
-            <TechStack />
-          </div>
         </motion.div>
       </div>
+
+      {/* Skills */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        viewport={{ once: true }}
+        className="w-full max-w-5xl mt-8 flex flex-wrap justify-center gap-2"
+      >
+        {primarySkills.map((skill) => (
+          <Pill key={skill}>{skill}</Pill>
+        ))}
+
+        <AnimatePresence>
+          {showMore && moreSkills.map((skill, index) => (
+            <motion.div
+              key={skill}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2, delay: index * 0.02 }}
+            >
+              <Pill>{skill}</Pill>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        <button
+          onClick={() => setShowMore(!showMore)}
+          className="inline-flex items-center gap-2 rounded-full border border-stone-300 px-3 py-1 text-sm text-stone-500 hover:border-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
+        >
+          {showMore ? "Show less" : "Show more"}
+        </button>
+      </motion.div>
     </section>
   )
 }

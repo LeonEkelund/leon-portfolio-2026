@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Pill } from "@/components/ui/pill"
 import { ChevronDown } from "lucide-react"
 import { useLoading } from "@/components/loading-context"
-import Image from "next/image"
 
 export function Hero() {
   const [showTagline, setShowTagline] = useState(true)
@@ -15,11 +14,11 @@ export function Hero() {
   useEffect(() => {
     if (!isLoaded) return
 
-    // After 5 seconds, melt tagline into arrow
+    // After 3.5 seconds, melt tagline into arrow
     const meltTimer = setTimeout(() => {
       setShowTagline(false)
       setTimeout(() => setShowArrow(true), 600)
-    }, 5000)
+    }, 3500)
 
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -63,23 +62,7 @@ export function Hero() {
         }}
         className="text-6xl font-semibold tracking-tight text-foreground flex items-center"
       >
-        Hi, I'm Le
-        <span className="relative w-8 h-8 rounded-full overflow-hidden shadow-lg inline-block ml-1 mr-0.5 translate-y-1.5">
-          <Image
-            src="/images/avatar/leonimage.jpg"
-            alt="Leon"
-            fill
-            className="object-cover scale-125"
-            style={{ objectPosition: "40% center" }}
-            priority
-          />
-          {/* Light vignette */}
-          <span
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{ boxShadow: "inset 0 0 4px 1px rgba(0,0,0,0.2)" }}
-          />
-        </span>
-        n.
+        Hi, I'm Leon.
       </motion.h1>
 
 
