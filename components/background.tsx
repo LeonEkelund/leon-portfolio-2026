@@ -2,13 +2,22 @@
 
 export function Background() {
   return (
-    <div
-      className="absolute left-0 right-0 -z-10 pointer-events-none"
-      style={{
-        top: "-50px",
-        height: "calc(40vh + 50px)",
-        background: "radial-gradient(ellipse 120% 60% at 50% 50px, rgba(16, 185, 129, 0.06) 0%, transparent 100%)",
-      }}
-    />
+    <>
+      {/* Gradient */}
+      <div
+        className="fixed inset-0 -z-20 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 120% 60% at 50% 0%, rgba(16, 185, 129, 0.06) 0%, transparent 50%)",
+        }}
+      />
+
+      {/* Grain texture */}
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none opacity-[0.15]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+    </>
   );
 }

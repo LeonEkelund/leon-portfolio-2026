@@ -13,7 +13,7 @@ export function Hero() {
   useEffect(() => {
     if (!isLoaded) return
 
-    const timer = setTimeout(() => setShowScrollIndicator(true), 300)
+    const timer = setTimeout(() => setShowScrollIndicator(true), 1300)
 
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -73,29 +73,33 @@ export function Hero() {
         A <span className="opacity-70">creative</span> front-end developer.
       </motion.p>
 
-      <AnimatePresence>
-        {showScrollIndicator && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="absolute bottom-8 right-8"
-          >
+      <div className="mt-16 h-6">
+        <AnimatePresence>
+          {showScrollIndicator && (
             <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="text-foreground/70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              <ChevronDown className="h-10 w-10" />
+              <motion.div
+                animate={{
+                  y: [0, 6, 0],
+                  opacity: [0.4, 0.7, 0.4]
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: [0.45, 0, 0.55, 1],
+                }}
+                className="text-foreground"
+              >
+                <ChevronDown className="h-6 w-6" />
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
 
     </section>
   )

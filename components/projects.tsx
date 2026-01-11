@@ -7,6 +7,7 @@ import { SiGithub } from "react-icons/si"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { Lightbox } from "@/components/ui/lightbox"
 import { useLightbox } from "@/components/lightbox-context"
+import { Frame } from "@/components/ui/frame"
 
 const images3d = [
   { name: "render-1.png", src: "/images/3d/1.png" },
@@ -87,18 +88,15 @@ export function Projects() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="relative w-full max-w-6xl" style={{ zIndex: 10 }}
+        className="relative w-full max-w-6xl mt-16" style={{ zIndex: 10 }}
       >
-        {/* Finder Window */}
-        <div
-          className="rounded-xl border border-stone-200 bg-white backdrop-blur-xl overflow-hidden shadow-lg"
-          style={{
-            boxShadow: '0 0 60px rgba(16, 185, 129, 0.12), 0 20px 40px rgba(0, 0, 0, 0.08)',
-            transition: 'all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)'
-          }}
-        >
+        <Frame src="/images/frames/bgimage1.png" padding={60} hideOnMobile>
+          {/* Finder Window */}
+          <div
+            className="rounded-xl border border-stone-200 bg-transparent overflow-hidden shadow-lg"
+          >
           {/* Title Bar */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-stone-50 border-b border-stone-200">
+          <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-stone-200">
             {/* Traffic Lights */}
             <div className="flex gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
@@ -137,7 +135,7 @@ export function Projects() {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 p-5 sm:p-6">
+            <div className="flex-1 p-5 sm:p-6 bg-white">
               <AnimatePresence mode="wait">
                 {activeItem === "projects" && (
                   <motion.div
@@ -347,6 +345,7 @@ export function Projects() {
             </div>
           </div>
         </div>
+        </Frame>
       </motion.div>
 
       <Lightbox

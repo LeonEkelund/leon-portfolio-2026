@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { CtaCard } from "@/components/bento-tiles/cta-card"
+import { Frame } from "@/components/ui/frame"
 
 export function Contact() {
   return (
@@ -26,16 +27,12 @@ export function Contact() {
         viewport={{ once: true }}
         className="relative w-full max-w-md"
       >
-        {/* CTA Card container */}
-        <div className="relative h-16 rounded-2xl border border-white/10 bg-transparent backdrop-blur-xl overflow-hidden shadow-lg">
-          <CtaCard />
-        </div>
-
-        {/* Decorative corner accents */}
-        <div className="absolute -top-2 -left-2 w-5 h-5 border-l-2 border-t-2 border-foreground/20 rounded-tl-2xl" />
-        <div className="absolute -top-2 -right-2 w-5 h-5 border-r-2 border-t-2 border-foreground/20 rounded-tr-2xl" />
-        <div className="absolute -bottom-2 -left-2 w-5 h-5 border-l-2 border-b-2 border-foreground/20 rounded-bl-2xl" />
-        <div className="absolute -bottom-2 -right-2 w-5 h-5 border-r-2 border-b-2 border-foreground/20 rounded-br-2xl" />
+        <Frame src="/images/frames/bgimage3.png" padding={20} objectPosition="20% 20%" hideOnMobile>
+          {/* CTA Card container */}
+          <div className="relative h-16 rounded-2xl border border-white/10 bg-transparent backdrop-blur-xl overflow-hidden shadow-lg">
+            <CtaCard />
+          </div>
+        </Frame>
       </motion.div>
     </section>
   )
