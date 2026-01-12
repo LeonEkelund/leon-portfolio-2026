@@ -84,7 +84,7 @@ export function Hero() {
                 ease: "easeInOut",
                 delay: 0.16,
               }}
-              className="text-5xl tracking-normal text-foreground/60 text-center font-light"
+              className="text-2xl md:text-5xl tracking-normal text-foreground/60 text-center font-light px-4"
             >
               A <span className="italic text-foreground/80">creative</span> front-end developer.
             </motion.p>
