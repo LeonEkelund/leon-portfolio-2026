@@ -72,32 +72,44 @@ export function About() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         viewport={{ once: true }}
-        className="w-full max-w-5xl mt-8 flex flex-wrap justify-center gap-2"
+        className="w-full max-w-5xl mt-8 flex flex-wrap justify-start gap-2"
       >
         {primarySkills.map((skill) => (
           <Pill key={skill}>{skill}</Pill>
         ))}
 
         <AnimatePresence>
-          {showMore && moreSkills.map((skill, index) => (
+          {showMore && moreSkills.map((skill) => (
             <motion.div
               key={skill}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2, delay: index * 0.02 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
             >
               <Pill>{skill}</Pill>
             </motion.div>
           ))}
         </AnimatePresence>
 
-        <button
-          onClick={() => setShowMore(!showMore)}
-          className="inline-flex items-center gap-2 rounded-full border border-stone-300 px-3 py-1 text-sm text-stone-500 hover:border-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
-        >
-          {showMore ? "Show less" : "Show more"}
-        </button>
       </motion.div>
+
+      <button
+        onClick={() => setShowMore(!showMore)}
+        className="mt-4 inline-flex items-center justify-center rounded-full border border-stone-300 px-3 py-1 text-sm text-stone-500 hover:border-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={showMore ? "less" : "more"}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.1 }}
+          >
+            {showMore ? "Show less" : "Show more"}
+          </motion.span>
+        </AnimatePresence>
+      </button>
     </section>
   )
 }

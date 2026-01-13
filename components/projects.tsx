@@ -88,9 +88,9 @@ export function Projects() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="relative w-full max-w-6xl mt-16" style={{ zIndex: 10 }}
+        className="relative w-full max-w-[1100px] mt-16" style={{ zIndex: 10 }}
       >
-        <Frame src="/images/frames/bgimage1.png" padding={60} hideOnMobile>
+        <Frame src="/images/frames/bgimage1.png" padding={50} hideOnMobile>
           {/* Finder Window */}
           <div
             className="rounded-xl border border-stone-200 bg-transparent overflow-hidden shadow-lg"
@@ -112,7 +112,7 @@ export function Projects() {
             <div className="w-14" /> {/* Spacer for centering */}
           </div>
 
-          <div className="flex min-h-[520px] sm:min-h-[650px] transition-all duration-300 ease-in-out">
+          <div className="flex min-h-[470px] sm:min-h-[580px] transition-all duration-300 ease-in-out">
             {/* Sidebar */}
             <div className="w-16 sm:w-56 border-r border-stone-200 bg-stone-50 p-2 sm:p-3">
               <div className="text-[10px] sm:text-sm text-stone-500 font-medium px-2 sm:px-3 py-1 sm:py-1.5 mb-1">
