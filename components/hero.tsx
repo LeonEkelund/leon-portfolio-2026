@@ -100,7 +100,7 @@ export function Hero() {
               onClick={() => {
                 const projects = document.getElementById("projects")
                 if (projects) {
-                  const yOffset = 75
+                  const yOffset = 40
                   const y = projects.getBoundingClientRect().top + window.pageYOffset + yOffset
                   window.scrollTo({ top: y, behavior: "smooth" })
                 }
