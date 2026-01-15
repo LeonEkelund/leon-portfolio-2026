@@ -81,7 +81,7 @@ export function Projects() {
   }
 
   return (
-    <section id="projects" className="relative flex flex-col items-center justify-center px-4 sm:px-16 xl:px-4 py-12 sm:py-20">
+    <section id="projects" className="relative flex flex-col items-center justify-center px-4 sm:px-16 xl:px-4 pb-12 sm:pb-20">
       <SectionHeading title="Work" mobileUnderlineImage="/images/frames/bgimage3.png" underlinePosition="center 20%" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}

@@ -34,7 +34,7 @@ export function Hero() {
   }, [isLoaded])
 
   return (
-    <section id="home" className="relative flex min-h-screen flex-col items-center
+    <section id="home" className="relative flex h-screen flex-col items-center
      justify-center px-4 gap-2">
 
       <motion.div
@@ -100,7 +100,7 @@ export function Hero() {
               onClick={() => {
                 const projects = document.getElementById("projects")
                 if (projects) {
-                  const yOffset = 40
+                  const yOffset = 0
                   const y = projects.getBoundingClientRect().top + window.pageYOffset + yOffset
                   window.scrollTo({ top: y, behavior: "smooth" })
                 }
