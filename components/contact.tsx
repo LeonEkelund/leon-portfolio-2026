@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { CtaCard } from "@/components/bento-tiles/cta-card"
 import { Frame } from "@/components/ui/frame"
@@ -8,7 +9,7 @@ import { Frame } from "@/components/ui/frame"
 export function Contact() {
   return (
     <section id="contact" className="relative flex flex-col items-center justify-center px-4 py-12 overflow-hidden">
-      <SectionHeading title="Let's Work Together" />
+      <SectionHeading title="Let's Work Together" mobileUnderlineImage="/images/frames/bgimage3.png" underlinePosition="center 80%" />
 
       <motion.p
         initial={{ opacity: 0, y: 20 }}
@@ -30,6 +31,16 @@ export function Contact() {
         <Frame src="/images/frames/bgimage3.png" padding={20} objectPosition="20% 20%" hideOnMobile>
           {/* CTA Card container */}
           <div className="relative h-16 rounded-2xl border border-white/10 bg-transparent backdrop-blur-xl overflow-hidden shadow-lg">
+            {/* Mobile-only background */}
+            <div className="sm:hidden absolute inset-0">
+              <Image
+                src="/images/frames/bgimage3.png"
+                alt=""
+                fill
+                className="object-cover contrast-110 brightness-90"
+                style={{ objectPosition: "center 20%" }}
+              />
+            </div>
             <CtaCard />
           </div>
         </Frame>

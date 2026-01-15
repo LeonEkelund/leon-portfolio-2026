@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, X, Copy, Check } from "lucide-react";
+import Image from "next/image";
 
 const EMAIL = "leongudmundssonekelund@gmail.com";
 

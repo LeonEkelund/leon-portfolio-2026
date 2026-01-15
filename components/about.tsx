@@ -23,8 +23,8 @@ export function About() {
   const [showMore, setShowMore] = useState(false)
 
   return (
-    <section id="about" className="relative flex flex-col items-center justify-center px-4 py-20">
-      <SectionHeading title="About" />
+    <section id="about" className="relative flex flex-col items-center justify-center px-4 py-12 sm:py-20">
+      <SectionHeading title="About" mobileUnderlineImage="/images/frames/bgimage3.png" underlinePosition="center 50%" />
 
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Text - shows first on mobile, first on desktop */}
@@ -65,6 +65,9 @@ export function About() {
           </div>
         </motion.div>
       </div>
+
+      {/* Divider */}
+      <div className="relative z-10 w-1/4 mt-10 h-px bg-stone-300/50 mx-auto" />
 
       {/* Skills */}
       <motion.div

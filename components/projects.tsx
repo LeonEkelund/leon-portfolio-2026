@@ -81,14 +81,14 @@ export function Projects() {
   }
 
   return (
-    <section id="projects" className="relative flex flex-col items-center justify-center px-4 py-20">
-      <SectionHeading title="Work" />
+    <section id="projects" className="relative flex flex-col items-center justify-center px-4 sm:px-16 xl:px-4 py-12 sm:py-20">
+      <SectionHeading title="Work" mobileUnderlineImage="/images/frames/bgimage3.png" underlinePosition="center 20%" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="relative w-full max-w-[1100px] mt-16" style={{ zIndex: 10 }}
+        className="relative w-full max-w-[1085px] sm:mt-12" style={{ zIndex: 10 }}
       >
         <Frame src="/images/frames/bgimage1.png" padding={50} hideOnMobile>
           {/* Finder Window */}
@@ -112,7 +112,7 @@ export function Projects() {
             <div className="w-14" /> {/* Spacer for centering */}
           </div>
 
-          <div className="flex min-h-[470px] sm:min-h-[580px] transition-all duration-300 ease-in-out">
+          <div className="flex min-h-[455px] sm:min-h-[565px]">
             {/* Sidebar */}
             <div className="w-16 sm:w-56 border-r border-stone-200 bg-stone-50 p-2 sm:p-3">
               <div className="text-[10px] sm:text-sm text-stone-500 font-medium px-2 sm:px-3 py-1 sm:py-1.5 mb-1">

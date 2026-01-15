@@ -45,7 +45,7 @@ export function Frame({
           src={src}
           alt={alt}
           fill
-          className="object-cover contrast-110 brightness-90"
+          className="object-cover contrast-110 brightness-90 object-top"
           style={{ objectPosition }}
         />
         {/* Noise overlay */}

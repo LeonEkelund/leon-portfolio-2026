@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { NavigationDock } from "@/components/navigation-dock"
+import { Logo } from "@/components/logo"
 import { Albert_Sans } from "next/font/google"
 import { Background } from "@/components/background"
 import { LenisProvider } from "@/components/lenis-provider"
@@ -38,6 +39,7 @@ export default function RootLayout({
           <LightboxProvider>
             <LenisProvider>
               <Background />
+              <Logo />
               {children}
               <NavigationDock />
             </LenisProvider>
