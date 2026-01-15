@@ -89,7 +89,9 @@ export function StockholmMap() {
           filter: none !important;
         }
       `}</style>
-      <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
+      <div ref={mapContainer} className="absolute inset-0 w-full h-full saturate-[0.8]" />
+      {/* Warm tint overlay */}
+      <div className="absolute inset-0 bg-amber-100/[0.04] pointer-events-none" />
     </>
   );
 }

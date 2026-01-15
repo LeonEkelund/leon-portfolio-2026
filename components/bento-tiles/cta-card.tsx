@@ -75,7 +75,7 @@ function MobileCtaCard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
                 onClick={() => handleOptionClick(option.action)}
-                className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
+                className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 active:text-foreground transition-colors touch-manipulation"
               >
                 <option.icon />
                 <span className="text-xs text-muted-foreground">{option.label}</span>
@@ -86,7 +86,7 @@ function MobileCtaCard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: contactOptions.length * 0.05 }}
               onClick={handleCopyEmail}
-              className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-white/5 active:bg-white/15 transition-colors touch-manipulation"
+              className="flex flex-col items-center gap-1.5 px-3 sm:px-4 py-2 active:text-foreground transition-colors touch-manipulation"
             >
               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
               <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy Email"}</span>
@@ -207,7 +207,7 @@ function DesktopCtaCard() {
               <button
                 key={option.label}
                 onClick={() => handleOptionClick(option.action)}
-                className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                className="flex flex-col items-center gap-1.5 px-4 py-2 hover:text-foreground transition-colors"
               >
                 <option.icon />
                 <span className="text-xs text-muted-foreground">{option.label}</span>
@@ -215,7 +215,7 @@ function DesktopCtaCard() {
             ))}
             <button
               onClick={handleCopyEmail}
-              className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+              className="flex flex-col items-center gap-1.5 px-4 py-2 hover:text-foreground transition-colors"
             >
               {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
               <span className="text-xs text-muted-foreground">{copied ? "Copied!" : "Copy Email"}</span>

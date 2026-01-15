@@ -60,7 +60,7 @@ export function About() {
           className="order-2 flex flex-col gap-4"
         >
           {/* Stockholm Map Tile */}
-          <div className="relative h-48 md:h-64 rounded-2xl border border-stone-200 overflow-hidden shadow-lg">
+          <div className="relative h-48 md:h-64 rounded-2xl border border-stone-200 overflow-hidden shadow-sm">
             <StockholmMap />
           </div>
         </motion.div>
