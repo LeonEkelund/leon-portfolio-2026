@@ -43,7 +43,7 @@ const projects: Project[] = [
   {
     name: "Band-page",
     description: "A sleek, animated website for a modern band featuring smooth scroll, dynamic visuals, merch store integration, and upcoming tour dates.",
-    tech: ["React", "Lenis", "Framer Motion", "Tailwind"],
+    tech: ["React", "Framer Motion", "Tailwind"],
     website: "https://band-page.netlify.app/",
     github: "https://github.com/LeonEkelund/band-page",
   },
