@@ -90,11 +90,17 @@ export function Projects() {
         viewport={{ once: true }}
         className="relative w-full max-w-[1085px] sm:mt-12" style={{ zIndex: 10 }}
       >
-        <Frame src="/images/frames/bgimage1.png" padding={50} hideOnMobile>
-          {/* Finder Window */}
-          <div
-            className="rounded-xl border border-stone-200 bg-transparent overflow-hidden shadow-lg"
-          >
+        {/* Frame background - fixed size, doesn't respond to content */}
+        <div className="absolute top-[-50px] left-[-50px] right-[-50px] h-[715px] hidden sm:block pointer-events-none">
+          <Frame src="/images/frames/bgimage1.png" padding={0} className="h-full w-full">
+            <div className="h-full" />
+          </Frame>
+        </div>
+
+        {/* Finder Window - can grow independently */}
+        <div
+          className="relative rounded-xl border border-stone-200 bg-transparent overflow-hidden shadow-lg"
+        >
           {/* Title Bar */}
           <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-stone-200">
             {/* Traffic Lights */}
@@ -345,7 +351,6 @@ export function Projects() {
             </div>
           </div>
         </div>
-        </Frame>
       </motion.div>
 
       <Lightbox

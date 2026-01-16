@@ -37,7 +37,7 @@ export function Contact() {
                 src="/images/frames/bgimage3.png"
                 alt=""
                 fill
-                className="object-cover contrast-110 brightness-90"
+                className="object-cover contrast-110 brightness-90 blur-md"
                 style={{ objectPosition: "center 20%" }}
               />
             </div>
