@@ -20,6 +20,11 @@ const albertSans = Albert_Sans({
 export const metadata: Metadata = {
   title: "Leon Ekelund Portfolio",
   description: "Stockholm-based front-end developer with a passion for creative, interactive web experiences. Available for new opportunities.",
+  openGraph: {
+    title: "Leon Ekelund Portfolio",
+    description: "Stockholm-based front-end developer with a passion for creative, interactive web experiences.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
