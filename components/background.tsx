@@ -3,14 +3,6 @@
 export function Background() {
   return (
     <>
-      {/* Gradient */}
-      <div
-        className="fixed inset-0 -z-20 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 120% 60% at 50% 0%, rgba(16, 185, 129, 0.06) 0%, transparent 50%)",
-        }}
-      />
-
       {/* Grain texture */}
       <div
         className="fixed inset-0 -z-10 pointer-events-none opacity-[0.15]"
